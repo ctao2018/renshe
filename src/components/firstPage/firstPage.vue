@@ -176,8 +176,6 @@ export default {
           setTimeout(() => {
             this.$router.push({path: '/cityChoice/'})
           }, 2000)
-//          that.cityName = '佛山'
-//          that._queryOpenCityCodeInfoByCityName()
         }
       }).catch((res) => {
         console.log('error', res)
@@ -191,17 +189,17 @@ export default {
         console.log('res', res.data.data)
         let mkList = res.data.data
         for (let i = 0; i < mkList.length; i++) {
-          if (mkList[i].moduleEn === 'a') {
+          if (mkList[i].moduleEn === 'fixDrugstore') {
             this.ydshow = true
-          } else if (mkList[i].moduleEn === 'b') {
+          } else if (mkList[i].moduleEn === 'transactInstitution') {
             this.jbshow = true
-          } else if (mkList[i].moduleEn === 'c') {
+          } else if (mkList[i].moduleEn === 'fixHospitals') {
             this.yyshow = true
-          } else if (mkList[i].moduleEn === 'd') {
+          } else if (mkList[i].moduleEn === 'insuraceDrugs') {
             this.ypshow = true
-          } else if (mkList[i].moduleEn === 'e') {
+          } else if (mkList[i].moduleEn === 'businessGuide') {
             this.bsshow = true
-          } else if (mkList[i].moduleEn === 'f') {
+          } else if (mkList[i].moduleEn === 'commonQuestion') {
             this.wtshow = true
           }
         }
