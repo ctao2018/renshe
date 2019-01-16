@@ -32,6 +32,15 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  #app {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    left:0;
+    top:0;
+  }
   .child-view {
     margin: 0 auto;
     width: 100%;

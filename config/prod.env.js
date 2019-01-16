@@ -2,5 +2,6 @@
 module.exports = {
   NODE_ENV: '"production"',
   EVN_CONFIG:'"prod"',
-  API_ROOT: '"https://www.msyds.com/msyapp/"'
+  API_ROOT: '"/api/dist/"',
+  HOST:'"http://120.77.47.227"'
 }

@@ -8,7 +8,7 @@
         <i class="fp-toppic"></i>
         <div class="fp-searbx">
           <span class="fp-sl" @click="toCityCh()">{{cityName}}<i class="fp-sli"></i></span>
-          <div class="fp-sr">
+          <div class="fp-sr" @click="toComSear()">
             <i class="fp-sri"></i>
             <!--<div class="fp-srr"><input class="fp-srrinp" v-model="serMsg" placeholder="试试搜索社保问题" type="text"></div>-->
             <div class="fp-srr"><span class="fp-srspa">试试搜索社保问题</span></div>
@@ -17,25 +17,25 @@
       </div>
       <div class="fp-bxb">
         <ul class="fp-bul">
-          <li class="fp-bli" @click="topageFn(1)" v-if="jbshow">
+          <li class="fp-bli" @click="topageFn(1)" v-show="jbshow">
             <i class="fp-blii fp-bia"></i>
             <p class="fp-blip">社保网点查询</p>
           </li>
-          <li class="fp-bli" @click="topageFn(2)" v-if="yyshow">
+          <li class="fp-bli" @click="topageFn(2)" v-show="yyshow">
             <i class="fp-blii fp-bib"></i>
             <p class="fp-blip">定点医院</p>
           </li>
-          <li class="fp-bli" @click="topageFn(3)" v-if="ydshow">
+          <li class="fp-bli" @click="topageFn(3)" v-show="ydshow">
             <i class="fp-blii fp-bic"></i>
             <p class="fp-blip">定点零售药店</p>
           </li>
-          <li class="fp-bli" @click="topageFn(4)" v-if="wtshow">
+          <li class="fp-bli" @click="topageFn(4)" v-show="wtshow">
             <i class="fp-blii fp-bid"></i>
             <p class="fp-blip">常见问题</p>
           </li>
         </ul>
       </div>
-      <div class="fp-bxc" v-if="bsshow">
+      <div class="fp-bxc" v-show="bsshow">
         <div class="fp-ctit">
           <span class="fp-ctitl"><i class="fp-ctitli"></i>办事指南</span>
           <span class="fp-ctitr" @click="toGuideFn('all')">全部</span>
@@ -61,7 +61,7 @@
           </ul>
         </div>
       </div>
-      <div class="fp-bxd"  v-if="ypshow">
+      <div class="fp-bxd"  v-show="ypshow">
         <div class="fp-ctit">
           <span class="fp-ctitl"><i class="fp-ctitli"></i>其他</span>
           <span class="fp-ctitr"></span>
@@ -131,6 +131,10 @@ export default {
     // to 城市选择页面
     toCityCh () {
       this.$router.push({path: '/cityChoice/'})
+    },
+    // to 综合搜索页面
+    toComSear () {
+      this.$router.push({path: '/comSearch/' + this.cityCode})
     },
     // 获取当前位置
     getPosiFn () {

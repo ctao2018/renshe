@@ -7,12 +7,15 @@
           <li class="cp-li clearfix" v-for="(item,index) in bsList" :key="index" @click="showdtFn(index)">
             <div class="clearfix pb10">
               <p class="cp-lil left c3">{{item.lists.articleTitle}}</p>
-              <i class="cp-arrri right" :class="{active: item.flag}"></i>
+              <i class="cp-arrri right" :class="{active: item.flag === 'true'}"></i>
             </div>
-            <div class="cp-licont" v-if="item.flag" v-html="item.lists.answer"></div>
+            <div class="cp-licont" v-if="item.flag === 'true'" v-html="item.lists.answer"></div>
           </li>
         </ul>
       </v-scroll>
+      <div class="loading-container" v-show="showloading">
+        <loading></loading>
+      </div>
       <div class="cp-btom c9">常见问题仅供参考，如有疑问请参考当地人社官网</div>
     </div>
 </template>
@@ -99,24 +102,31 @@ export default {
             _that.busy = true
           } else {
             _that.busy = false
-            _that.newlist = res.data.data.rows.map((obj, index) => {
-              return {
-                lists: obj,
-                flag: false
-              }
-            })
-            _that.bsList = _that.bsList.concat(_that.newlist)
+          let yList2 = res.data.data.rows
+          let nList2 = []
+          for (let j = 0; j<yList2.length;j++) {
+            let b={flag:'flase',lists:yList2[j]}
+            nList2.push(b)
+          }
+            _that.bsList = _that.bsList.concat(nList2)
             console.log(_that.bsList)
           }
         } else {
           // 第一次加载数据
-          _that.bsList = res.data.data.rows.map((obj, index) => {
-            return {
-              lists: obj,
-              flag: false
-            }
-          })
-          console.log(_that.bsList)
+          // _that.bsList = res.data.data.rows.map((obj, index) => {
+          //   return {
+          //     lists: obj,
+          //     flag: false
+          //   }
+          // })
+          let yList = res.data.data.rows
+          let nList = []
+          for (let i = 0; i<yList.length;i++) {
+            let a={flag:'flase',lists:yList[i]}
+            nList.push(a)
+          }
+          console.log('nList',nList)
+           _that.bsList = nList
           // 当第一次加载数据完之后，把这个滚动到底部的函数触发打开
           _that.busy = false
         }
@@ -144,15 +154,19 @@ export default {
         this._formalCommonQuestion(true)
       }, 500)
     },
+    // 点击切换
     getSelId (id) {
-      this.bsList = []
       this.category = id
       this.showloading = true
       this.pageNum = 1
       this._formalCommonQuestion()
     },
     showdtFn (i) {
-      this.bsList[i].flag = !this.bsList[i].flag
+      if (this.bsList[i].flag === 'true') {
+        this.bsList[i].flag = 'false'
+      } else {
+        this.bsList[i].flag = 'true'
+      }
     }
   },
   components: {
@@ -176,11 +190,11 @@ export default {
         transition: all .2s
         .cp-lil
           width 620px
-          font-size 36px
+          font-size 32px
           line-height 50px
         .cp-licont
           color #888888
-          font-size 32px
+          font-size 28px
           line-height 45px
           padding-top 19px
           border-top 2px solid #eeeeee

@@ -185,9 +185,17 @@ const router = new Router({
       }
     },
     {
-      path: '/comSearch',
+      path: '/comSearch/:citycode',
       name: 'comSearch',
       component: _import('comSearch/comSearch'),
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/comQuestDetail/:id',
+      name: 'comQuestDetail',
+      component: _import('comQuestDetail/comQuestDetail'),
       meta: {
         keepAlive: false
       }

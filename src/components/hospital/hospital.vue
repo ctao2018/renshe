@@ -32,8 +32,8 @@
         <ul class="ds-ul">
           <li class="ds-li" v-for="(item,index) in yyList" :key="index" @click="toDtFn(item.id)">
             <p class="ds-lipa c3">{{item.name}}
-              <span class="h-dja" v-if="item.grade == '三级' || item.grade == '三甲'">{{item.grade}}</span>
-              <span class="h-djb" v-else-if="item.grade == '二级' || item.grade == '二甲'">{{item.grade}}</span>
+              <span class="h-dja" v-if="yygrade[index] == '三'">{{item.grade}}</span>
+              <span class="h-djb" v-else-if="yygrade[index] == '二'">{{item.grade}}</span>
             </p>
             <div class="clearfix c9">
               <p class="ds-lipb left">{{item.address}}</p>
@@ -75,6 +75,7 @@ export default {
       pageNum: 1,
       area: '',
       grade: '',
+      yygrade: [],
       jwflag: 0,
       lng: '',
       lat: '',
@@ -179,12 +180,23 @@ export default {
           } else {
             _that.busy = false
             _that.yyList = _that.yyList.concat(res.data.data.rows)
+            let moregrade = []
+            for (let j = 0;j<res.data.data.rows.length; j++) {
+              moregrade.push(res.data.data.rows[j].grade.substring(0, 1))
+            }
+             _that.yygrade = _that.yygrade.concat(moregrade)
             console.log(_that.yyList)
           }
 
         } else {
           // 第一次加载数据
-          _that.yyList = res.data.data.rows
+          let arrlist = []
+          _that.yygrade = []
+          arrlist = res.data.data.rows
+          for (let i = 0;i<arrlist.length; i++) {
+            _that.yygrade.push(arrlist[i].grade.substring(0, 1))
+          }
+          _that.yyList = arrlist
           console.log(_that.yyList)
           // 当第一次加载数据完之后，把这个滚动到底部的函数触发打开
           _that.busy = false
@@ -300,7 +312,7 @@ export default {
         padding:20px 30px
         border-bottom 2px solid #eeeeee
         .ds-lipa
-          font-size 36px
+          font-size 32px
           overflow hidden
           text-overflow ellipsis
           white-space nowrap

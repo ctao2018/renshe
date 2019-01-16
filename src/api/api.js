@@ -121,3 +121,10 @@ export function queryTitleOrContentByKey (query) {
     params: query
   })
 }
+export function queryDetailByTitleOrContent (query) {
+  return request({
+    url: 'formalCommonQuestion/queryDetailByTitleOrContent',
+    method: 'get',
+    params: query
+  })
+}

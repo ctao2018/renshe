@@ -24,7 +24,7 @@
       <div v-if="bsList">
         <v-scroll :on-refresh="onRefresh"  v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" :lodingTxt="lodingTxt"  >
           <ul class="se-bgul" v-if="bsList">
-            <li class="bgli" v-for="(item,index) in bsList" :key="index" @click="toznDtFn(item.id)">
+            <li class="bgli" v-for="(item,index) in bsList" :key="index" @click="toznDtFn(item.id,item.type)">
               <div class="bglil"><p class="bglip c3">{{item.title}}</p></div>
               <i class="bg-arrri"></i>
             </li>
@@ -143,6 +143,7 @@ export default {
     // 列表查询
     _queryTitleOrContentByKey (flag) {
       this.shownodata = false
+      this.lodingTxt = false
       let _that = this
       queryTitleOrContentByKey({
         cityCode: this.cityCode,
@@ -201,8 +202,14 @@ export default {
       }, 500)
     },
     // to 详情
-    toznDtFn (id) {
-      this.$router.push({path: `/guideDetail/${id}`})
+    toznDtFn (id,type) {
+      if (type === 'businessGuide') {
+        this.$router.push({path: `/guideDetail/${id}`})
+      } else if (type === 'commonQuestion') {
+        this.$router.push({path: `/comQuestDetail/${id}`})
+      } else if (type === 'policy') {
+
+      }
     },
     show () {
       this.$refs.input1.blur()
@@ -300,7 +307,7 @@ export default {
         .bglil
           width 648px
           .bglip
-            font-size 36px
+            font-size 32px
             line-height 50px
             overflow hidden
             text-overflow ellipsis

@@ -35,8 +35,8 @@
       <ul class="syy-ul" v-if="yyList">
         <li class="ds-li" v-for="(item,index) in yyList" :key="index" @click="toyyDtFn(item.id)">
           <p class="ds-lipa c3">{{item.name}}
-            <span class="h-dja" v-if="item.grade == '三级' || item.grade == '三甲'">{{item.grade}}</span>
-            <span class="h-djb" v-else-if="item.grade == '二级' || item.grade == '二甲'">{{item.grade}}</span>
+            <span class="h-dja" v-if="yygrade[index] == '三'">{{item.grade}}</span>
+            <span class="h-djb" v-else-if="yygrade[index] == '二'">{{item.grade}}</span>
           </p>
           <div class="clearfix c9">
             <p class="ds-lipb left">{{item.address}}</p>
@@ -121,6 +121,7 @@ export default {
       bsList: [],
       ydList: [],
       wtList: [],
+      yygrade: [],
       showhd: true,
       showloading: false,
       shownodata: false,
@@ -390,7 +391,13 @@ export default {
         if (res.data.data.rows.length < 1) {
           _that.shownodata = true
         }
-        _that.yyList = res.data.data.rows
+        let arrlist = []
+        _that.yygrade = []
+        arrlist = res.data.data.rows
+        for (let i = 0;i<arrlist.length; i++) {
+          _that.yygrade.push(arrlist[i].grade.substring(0, 1))
+        }
+        _that.yyList = arrlist
         console.log(_that.yyList)
       }).catch((res) => {
         _that.showloading = false
@@ -612,7 +619,7 @@ export default {
         padding:20px 30px
         border-bottom 2px solid #eeeeee
         .ds-lipa
-          font-size 36px
+          font-size 32px
           overflow hidden
           text-overflow ellipsis
           white-space nowrap
@@ -653,7 +660,7 @@ export default {
         padding:20px 30px
         border-bottom 2px solid #eeeeee
         .jblipa
-          font-size 36px
+          font-size 32px
           overflow hidden
           text-overflow ellipsis
           white-space nowrap
@@ -697,7 +704,7 @@ export default {
         padding:20px 30px
         border-bottom 2px solid #eeeeee
         .ds-lipa
-          font-size 36px
+          font-size 32px
           overflow hidden
           text-overflow ellipsis
           white-space nowrap
@@ -720,11 +727,11 @@ export default {
         transition: all .2s
         .cp-lil
           width 620px
-          font-size 36px
+          font-size 32px
           line-height 50px
         .cp-licont
           color #888888
-          font-size 32px
+          font-size 28px
           line-height 45px
           padding-top 19px
           border-top 2px solid #eeeeee

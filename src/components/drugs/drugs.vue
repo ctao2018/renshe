@@ -184,7 +184,7 @@ export default {
         padding:24px 32px
         border-bottom 2px solid #eeeeee
         .jblipa
-          font-size 34px
+          font-size 32px
           overflow hidden
           text-overflow ellipsis
           white-space nowrap
