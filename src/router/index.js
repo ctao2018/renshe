@@ -10,6 +10,7 @@ Router.prototype.goBack = function () {
 const router = new Router({
   //mode: 'hash',
   mode: 'history',
+  base: '/sbjccx/',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
@@ -66,6 +67,14 @@ const router = new Router({
     },
     {
       path: '/businessGuide/:citycode/:type',
+      name: 'businessGuidewithcitycodetype',
+      component: _import('businessGuide/businessGuide'),
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/businessGuide/:citycode',
       name: 'businessGuidewithcitycode',
       component: _import('businessGuide/businessGuide'),
       meta: {

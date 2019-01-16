@@ -10,7 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     // 线上提示改为 ./
-    assetsPublicPath: '/',
+    assetsPublicPath: '/sbjccx/',
     //assetsPublicPath: './',   //线上
     proxyTable: {
       '/api': {
@@ -64,7 +64,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'sbjccx/static',
     assetsPublicPath: '/',
 
     /**
