@@ -1,6 +1,6 @@
 <template>
     <div class="drugs">
-      <mheader :title="title" :backi="backi" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
+      <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab class="tab" :line-width="2" custom-bar-width="50px" :active-color="selectColor" :default-color="defaltColor">
         <tab-item  v-for="(item,index) in ypslist" :key="index" :selected="index === 0" @on-item-click="tabclickFn(item.type)">{{item.name}}</tab-item>
       </tab>
@@ -36,6 +36,7 @@ export default {
       cityCode: '',
       title: '医保药品目录',
       backi: false,
+      zfbhd: false,
       searchi: true,
       morei: true,
       pageType: 'drugs',
@@ -68,9 +69,7 @@ export default {
 
   methods: {
     titFn () {
-      this.title = ''
-      this.backi = true
-      this.morei = false
+      this.zfbhd = true
       document.addEventListener('AlipayJSBridgeReady', function () {
         AlipayJSBridge.call('setTitle', {
           title: '医保药品目录'

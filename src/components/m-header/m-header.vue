@@ -1,13 +1,19 @@
 <template>
     <div class="m-header">
-        <div class="h-bx">
-          <div class="h-bxl">
+        <div class="h-bx" :class="{nobtline: zfbhd}">
+          <div class="h-bxl" v-if="!zfbhd">
             <i class="h-backi" v-if="!backi" @click="backFn()"></i>
             <span class="h-tit c3" v-if="title">{{title}}</span>
           </div>
-          <div class="h-bxr">
+          <div class="h-bxr" v-if="!zfbhd">
             <i class="h-fdji" v-if="searchi" @click="toSearFn()"></i>
             <i class="h-more" v-if="morei"></i>
+          </div>
+          <div class="h-sebx" v-if="zfbhd" @click="toSearFn()">
+            <i class="h-sebxi"></i>
+            <div class="h-sebxr">
+              <span>搜索</span>
+            </div>
           </div>
         </div>
     </div>
@@ -39,6 +45,14 @@ export default {
     backi: {
       type: Boolean,
       default: false
+    },
+    zfbhd: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
     }
   },
   methods: {
@@ -83,6 +97,8 @@ export default {
         align-items center
         justify-content space-between
         border-bottom 2px solid #eeeeee
+        &.nobtline
+          border-bottom 2px solid #ffffff
         .h-backi
           width 24px
           height 34px
@@ -110,4 +126,22 @@ export default {
             background url("../../assets/images/nav_more.png")
             background-size cover
             display inline-block
+        .h-sebx
+          width 100%
+          height 60px
+          background-color #f5f5f5
+          border-radius 2px
+          display flex
+          align-items center
+          .h-sebxi
+            width 29px
+            height 28px
+            background url("../../assets/images/list_search.png")
+            background-size cover
+            display inline-block
+            margin 0 15px 0 24px
+          .h-sebxr
+            flex 1
+            color #999999
+            font-size 28px
 </style>

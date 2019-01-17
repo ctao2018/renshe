@@ -1,6 +1,6 @@
 <template>
     <div class="jbnetwork">
-      <mheader :title="title" :backi="backi" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
+      <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab :list="qyList" @selId="getSelId"></tab>
       <v-scroll :on-refresh="onRefresh"  v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" >
         <ul class="jbul">
@@ -33,6 +33,7 @@ export default {
     return {
       cityCode: '',
       title: '社保经办网点',
+      zfbhd: false,
       backi: false,
       searchi: true,
       pageType: 'managementNetwork',
@@ -68,9 +69,7 @@ export default {
 
   methods: {
     titFn () {
-      this.title = ''
-      this.backi = true
-      this.morei = false
+      this.zfbhd = true
       document.addEventListener('AlipayJSBridgeReady', function () {
         AlipayJSBridge.call('setTitle', {
           title: '社保经办网点'
@@ -205,7 +204,6 @@ export default {
   .jbnetwork
     .jbul
       margin-top 114px
-      //margin-bottom 108px
       background-color #ffffff
       .jbli
         padding:20px 30px
@@ -217,7 +215,7 @@ export default {
           white-space nowrap
           line-height 42px
         .jblipb
-          width 85%
+          width 80%
           font-size 28px
           overflow hidden
           text-overflow ellipsis

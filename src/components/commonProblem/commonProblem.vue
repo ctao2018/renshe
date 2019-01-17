@@ -1,6 +1,6 @@
 <template>
     <div class="commonProblem">
-      <mheader :title="title" :backi="backi" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
+      <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab :list="znList" @selId="getSelId"></tab>
       <v-scroll :on-refresh="onRefresh"  v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" >
         <ul class="cp-ul">
@@ -32,6 +32,7 @@ export default {
       cityCode: '',
       title: '常见问题',
       backi: false,
+      zfbhd: false,
       searchi: true,
       pageType: 'commonProblem',
       morei: true,
@@ -61,9 +62,7 @@ export default {
 
   methods: {
     titFn () {
-      this.title = ''
-      this.backi = true
-      this.morei = false
+      this.zfbhd = true
       document.addEventListener('AlipayJSBridgeReady', function () {
         AlipayJSBridge.call('setTitle', {
           title: '常见问题'

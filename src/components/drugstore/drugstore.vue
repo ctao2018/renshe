@@ -1,6 +1,6 @@
 <template>
     <div class="drugstore">
-      <mheader :title="title" :backi="backi" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
+      <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <div class="ds-top c3" @click="showSelFn()">
         <span>{{qyName}}</span>
         <i class="dowmarr" :class="{active: selshow}"></i>
@@ -44,6 +44,7 @@ export default {
       cityCode: '',
       title: '定点零售药店',
       backi: false,
+      zfbhd: false,
       qyName: '全部',
       searchi: true,
       pageType: 'drugstore',
@@ -77,9 +78,7 @@ export default {
 
   methods: {
     titFn () {
-      this.title = ''
-      this.backi = true
-      this.morei = false
+      this.zfbhd = true
       document.addEventListener('AlipayJSBridgeReady', function () {
         AlipayJSBridge.call('setTitle', {
           title: '定点零售药店'
@@ -257,7 +256,7 @@ export default {
           white-space nowrap
           line-height 42px
         .ds-lipb
-          width 85%
+          width 80%
           font-size 28px
           overflow hidden
           text-overflow ellipsis

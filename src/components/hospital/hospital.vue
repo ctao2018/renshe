@@ -1,6 +1,6 @@
 <template>
     <div class="hospital">
-      <mheader :title="title" :backi="backi" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
+      <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <div class="ds-top c3" >
         <div @click="showSelFn()">
           <span>{{qyName}}</span>
@@ -62,6 +62,7 @@ export default {
       cityCode: '',
       title: '定点医院',
       backi: false,
+      zfbhd: false,
       qyName: '全部',
       searchi: true,
       pageType: 'hospital',
@@ -100,9 +101,7 @@ export default {
 
   methods: {
     titFn () {
-      this.title = ''
-      this.backi = true
-      this.morei = false
+      this.zfbhd = true
       document.addEventListener('AlipayJSBridgeReady', function () {
         AlipayJSBridge.call('setTitle', {
           title: '定点医院'
@@ -338,7 +337,7 @@ export default {
             line-height 34px
             vertical-align middle
         .ds-lipb
-          width 85%
+          width 80%
           font-size 28px
           overflow hidden
           text-overflow ellipsis
