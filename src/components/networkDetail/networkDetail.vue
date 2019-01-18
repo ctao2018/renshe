@@ -35,6 +35,10 @@ export default {
   },
   mounted () {
   },
+  // beforeRouteLeave (to, from, next) {
+  //   to.meta.keepAlive = true
+  //   next()
+  // },
   methods: {
     // 是否显示头部
     titFn () {

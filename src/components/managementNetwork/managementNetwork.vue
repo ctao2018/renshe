@@ -65,8 +65,12 @@ export default {
       this.titFn()
     }
     this.getPosiFn()
+    // console.log(this.$store.state.app.token)
   },
-
+  // beforeRouteLeave (to, from, next) {
+  //   to.meta.keepAlive = false
+  //   next()
+  // },
   methods: {
     titFn () {
       this.zfbhd = true
