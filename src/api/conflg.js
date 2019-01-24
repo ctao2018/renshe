@@ -12,6 +12,8 @@ export const options = {
 
 export const ERR_OK = 0
 
+export const authBackURL = process.env.authBackURL
+
 // 服务器地址
 let baseURL = ''
 if (process.env.NODE_ENV === 'testing') {

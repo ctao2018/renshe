@@ -1,13 +1,19 @@
 import * as types from './mutation-types'
-
+import {
+  getToken
+} from '@/api/auth'
 const matutaions = {
   state: {
-    token: '123'
+    token: getToken(),
+    curUrl:''
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_CURURL: (state, curUrl) => {
+      state.curUrl = curUrl
     },
   },
   actions: {

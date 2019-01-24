@@ -1,8 +1,8 @@
-import {baseURL} from '@/api/conflg'
+import {authBackURL} from '@/api/conflg'
 import {getGrantInfoParam} from '@/api/api'
 
 export function zfbAuthFn () {
-  console.log(baseURL)
+  console.log(authBackURL)
   getGrantInfoParam({
     registePlat: 1,
     identityType: 1
@@ -11,5 +11,5 @@ export function zfbAuthFn () {
   }).catch((res) => {
     console.log('error', res)
   })
-  return baseURL
+  return authBackURL
 }

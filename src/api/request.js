@@ -1,5 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
+import router from '@/router'
 import store from '@/store'
 import {
   getToken
@@ -8,7 +9,7 @@ import {
 const service = axios.create({
   baseURL: process.env.API_ROOT,
   timeout: 15000,
-  // headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+  headers: {'Content-Type': 'application/json'}
 })
 
 // 请求拦截器
@@ -19,7 +20,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = getToken(); // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
     }
-    config.data = config.data ? qs.stringify(config.data) : null
+    // config.data = config.data ? qs.stringify(config.data) : null
     return config
   },
   error => {
@@ -30,14 +31,16 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     console.log('响应拦截器', response)
-    return Promise.resolve(response)
-    // if (response.status === 200) {
-    //   return Promise.resolve(response)
-    // } else {
-    //   return Promise.reject(response)
-    // }
+    if (response.data.code === 40301) {
+      router.replace({
+        path: '/auth/',
+        // query: { redirect: router.currentRoute.fullPath }
+      })
+      // return Promise.reject(response)
+    } else {
+      return Promise.resolve(response)
+    }
   },
-  // 服务器状态码不是200的情况
   error => {
     console.log('error2', error)
     // if (error.response.status) {

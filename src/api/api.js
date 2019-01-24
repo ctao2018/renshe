@@ -135,3 +135,10 @@ export function getGrantInfoParam (query) {
     params: query
   })
 }
+export function getTokenByCode(obj) {
+  return request({
+  url: 'auth/jwt/guest/getTokenByCode',
+  method: 'post',
+  data: obj
+  });
+}

@@ -208,6 +208,22 @@ const router = new Router({
       meta: {
         keepAlive: false
       }
+    },
+    {
+      path: '/auth',
+      name: 'auth',
+      component: _import('auth/auth'),
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/authback',
+      name: 'authback',
+      component: _import('authback/authback'),
+      meta: {
+        keepAlive: false
+      }
     }
   ]
 })
