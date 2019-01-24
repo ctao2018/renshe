@@ -202,7 +202,7 @@ export default {
       }, 500)
     },
     // to 详情
-    toznDtFn (id,type) {
+    toznDtFn (id, type) {
       if (type === 'businessGuide') {
         this.$router.push({path: `/guideDetail/${id}`})
       } else if (type === 'commonQuestion') {

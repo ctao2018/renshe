@@ -1,5 +1,9 @@
 import axios from 'axios'
 import qs from 'qs'
+import store from '@/store'
+import {
+  getToken
+} from '@/api/auth'
 
 const service = axios.create({
   baseURL: process.env.API_ROOT,
@@ -12,6 +16,9 @@ service.interceptors.request.use(
   config => {
     // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
+    if (store.getters.token) {
+      config.headers['Authorization'] = getToken(); // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
+    }
     config.data = config.data ? qs.stringify(config.data) : null
     return config
   },
@@ -22,6 +29,7 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
+    console.log('响应拦截器', response)
     return Promise.resolve(response)
     // if (response.status === 200) {
     //   return Promise.resolve(response)
@@ -31,6 +39,7 @@ service.interceptors.response.use(
   },
   // 服务器状态码不是200的情况
   error => {
+    console.log('error2', error)
     // if (error.response.status) {
     //   switch (error.response.status) {
     //     // 401: 未登录
