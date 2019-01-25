@@ -1,11 +1,16 @@
 <template>
-    <div></div>
+    <div>
+      <div class="loading-container" v-show="showloading">
+        <loading></loading>
+      </div>
+    </div>
 </template>
 
 <script type="text/ecmascript-6">
 import {authBackURL} from 'api/conflg'
 import {getTokenByCode} from 'api/api'
 import { setToken } from '@/api/auth'
+import loading from 'base/loading/loading'
 export default {
   data () {
     return {
@@ -51,15 +56,13 @@ export default {
         } else {
           this.$vux.toast.text('授权失败，请重试!', 'middle')
         }
-        
-       // window.location.href = 
-        // this.$router.push({path:decodeURIComponent(this.$route.query.redirect)})
       }).catch((res) => {
         console.log('error', res)
       })
     }
   },
   components: {
+    loading
   }
 }
 </script>

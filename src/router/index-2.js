@@ -17,6 +17,8 @@ const search = () => import('components/search/search')
 const cityChoice = () => import('components/cityChoice/cityChoice')
 const comSearch = () => import('components/comSearch/comSearch')
 const comQuestDetail = () => import('components/comQuestDetail/comQuestDetail')
+const auth = () => import('components/auth/auth')
+const authback = () => import('components/authback/authback')
 
 Vue.use(Router)
 Router.prototype.goBack = function () {
@@ -221,6 +223,22 @@ const router = new Router({
       path: '/comQuestDetail/:id',
       name: 'comQuestDetail',
       component: comQuestDetail,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/auth',
+      name: 'auth',
+      component: auth,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/authback',
+      name: 'authback',
+      component: authback,
       meta: {
         keepAlive: false
       }
