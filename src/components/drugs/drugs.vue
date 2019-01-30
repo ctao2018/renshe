@@ -53,7 +53,6 @@ export default {
     }
   },
   created () {
-    this.$store.commit('SET_CURURL', this.$route.path)
     if (this.$route.params.citycode) {
       this.cityCode = this.$route.params.citycode
     } else {

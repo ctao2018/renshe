@@ -34,7 +34,7 @@ service.interceptors.response.use(
     if (response.data.code === 40301) {
       router.replace({
         path: '/auth/',
-        // query: { redirect: router.currentRoute.fullPath }
+        query: { redirect: router.currentRoute.fullPath }
       })
       // return Promise.reject(response)
     } else {

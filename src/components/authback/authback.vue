@@ -7,31 +7,35 @@
 </template>
 
 <script type="text/ecmascript-6">
-import {authBackURL} from 'api/conflg'
+// import {authBackURL} from 'api/conflg'
 import {getTokenByCode} from 'api/api'
-import { setToken } from '@/api/auth'
+import { setToken } from 'api/auth'
 import loading from 'base/loading/loading'
+import { saveSearch } from 'api/cache' // 引用本地存储js
+import storage from 'good-storage' // 引入good-storage包
 export default {
   data () {
     return {
+      showloading: true
     }
   },
   created () {
     this.getCode()
-    console.log(this.$store.getters.curUrl)
+    // let curUrl = storage.get('tobackUrl')
+    // console.log('最后返回地址', curUrl[0])
   },
 
   methods: {
     getCode() {
       let url = decodeURI(location.search)
       let theRequest = new Object()
-      if (url.indexOf("?") != -1) {
-              let str = url.substr(1);
-              let strs = str.split("&");
-              for ( let i = 0; i < strs.length; i++) {
-                  theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-              }
-          }
+      if (url.indexOf('?') !== -1) {
+        let str = url.substr(1);
+        let strs = str.split('&');
+        for (let i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
+        }
+      }
      // console.log(theRequest)
       if (theRequest.auth_code) {
         this._getTokenByCode(theRequest.auth_code)
@@ -50,7 +54,8 @@ export default {
           if(res.data.data){
             setToken(res.data.data);
             this.$store.commit('SET_TOKEN', res.data.data);
-            this.$router.push({path: this.$store.getters.curUrl})
+            let curUrl = storage.get('tobackUrl')
+            this.$router.push({path: curUrl[0]})
            //window.location.href = this.$store.getters.curUrl
           }
         } else {
@@ -69,5 +74,6 @@ export default {
 
 <style  lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
- 
+ .weui-toast__content
+    font-size 26px
 </style>

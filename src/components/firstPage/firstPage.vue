@@ -104,7 +104,7 @@ export default {
       this.titFn()
     }
     //console.log('this.$route.path',this.$route.path)
-    this.$store.commit('SET_CURURL', this.$route.path)
+    
     //this.$store.commit('SET_CURURL', window.location.href)
     // console.log(this.$store.state.app.token)
     // console.log(this.$store.getters.token)
