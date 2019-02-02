@@ -39,7 +39,8 @@ export default {
       }).then((res) => {
         //console.log('res', res)
         let backUrl = encodeURIComponent(authBackURL)
-        let url = res.data.data.aplipayAuthUrl + '?app_id=' + res.data.data.appId + '&scope=auth_user,auth_base&redirect_uri=' + backUrl
+        // let url = res.data.data.aplipayAuthUrl + '?app_id=' + res.data.data.appId + '&scope=auth_user,auth_base&redirect_uri=' + backUrl
+        let url = res.data.data.aplipayAuthUrl + '?app_id=' + res.data.data.appId + '&scope=auth_base&redirect_uri=' + backUrl
         //console.log('href', url)
         window.location.href = url
         //this.$router.push({path: '/authback/'})
