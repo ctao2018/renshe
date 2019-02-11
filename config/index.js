@@ -6,7 +6,7 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
+    env: require('./dev.env'),
     // Paths
     assetsSubDirectory: 'static',
     // 线上提示改为 ./
@@ -14,11 +14,11 @@ module.exports = {
     //assetsPublicPath: './',   //线上
     proxyTable: {
       '/api': {
-        target: process.env.API_ROOT,//设置你调用的接口域名和端口号 别忘了加http
+        target: 'http://192.168.3.64:8765/',//设置你调用的接口域名和端口号 别忘了加http
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''//这里理解成用‘/api’代替target里面的地址，后面组assetsPublicPath要调用'http://40.00.100.100:3002/user/add'，直接写‘/api/user/add’即可
-        }
+        // pathRewrite: {
+        //   '^/api': ''//这里理解成用‘/api’代替target里面的地址，后面组assetsPublicPath要调用'http://40.00.100.100:3002/user/add'，直接写‘/api/user/add’即可
+        // }
       }
     },
 

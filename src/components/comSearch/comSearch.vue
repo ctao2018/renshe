@@ -21,15 +21,30 @@
           <div class="s-qcbx" v-if="historyxs"><span class="s-qcbxsa" @click="clearhis()">清除历史记录</span></div>
         </div>
       </div>
-      <div v-if="bsList">
-        <v-scroll :on-refresh="onRefresh"  v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" :lodingTxt="lodingTxt"  >
-          <ul class="se-bgul" v-if="bsList">
-            <li class="bgli" v-for="(item,index) in bsList" :key="index" @click="toznDtFn(item.id,item.type)">
-              <div class="bglil"><p class="bglip c3">{{item.title}}</p></div>
-              <i class="bg-arrri"></i>
-            </li>
-          </ul>
-        </v-scroll>
+      <div v-if="showbsList">
+        <div class="page-loadmore-wrapper" :style="{ height: wrapperHeight + 'px' }">
+          <mt-spinner v-show="InitialLoading" color="#26a2ff" class="toploadbx"></mt-spinner>
+          <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange"
+                       :bottom-method="loadBottom" @bottom-status-change="handleBottomChange"
+                       :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore">
+            <ul class="se-bgul" v-if="bsList">
+              <li class="bgli" v-for="(item,index) in bsList" :key="index" @click="toznDtFn(item.id,item.type)">
+                <div class="bglil"><p class="bglip c3">{{item.title}}</p></div>
+                <i class="bg-arrri"></i>
+              </li>
+            </ul>
+            <div slot="top" v-if="showloadmt" class="mint-loadmore-top mintLoadM" style="text-align:center;">
+              <span v-show="topStatus !== 'loading'" :class="{ 'is-rotate': topStatus === 'drop' }">↓</span>
+              <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff"></mt-spinner>
+              <span class="mint-loadmore-text">{{ topText }}</span>
+            </div>
+            <div slot="bottom" class="mint-loadmore-bottom">
+              <span v-show="bottomStatus !== 'loading'" :class="{ 'is-rotate': bottomStatus === 'drop' }">↑</span>
+              <mt-spinner v-show="bottomStatus == 'loading'" color="#26a2ff"></mt-spinner>
+              <span class="mint-loadmore-text">{{ bottomText }}</span>
+            </div>
+          </mt-loadmore>
+        </div>
       </div>
       <div class="loading-container" v-show="showloading">
         <loading></loading>
@@ -40,6 +55,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { Spinner } from 'mint-ui'
 import mheader from 'components/m-header/m-header'
 import bottomline from 'components/bottomLine/bottomLine'
 import {Toast} from 'vux'
@@ -64,10 +80,25 @@ export default {
       showloading: false,
       shownodata: false,
       lodingTxt: false,
+      showbsList: true,
       pageSize: 15,
       pageNum: 1,
       busy: true,
-      serkey: ''
+      serkey: '',
+      InitialLoading: true, // 初始加载
+      allLoaded: false, // 数据是否加载完毕
+      bottomStatus: '', // 底部上拉加载状态
+      wrapperHeight: 0, // 容器高度
+      topStatus: '', // 顶部下拉加载状态
+      topText: '',
+      topPullText: '下拉刷新',
+      topDropText: '释放更新',
+      topLoadingText: '加载中...',
+      bottomText: '',
+      bottomPullText: '上拉刷新',
+      bottomDropText: '释放更新',
+      bottomLoadingText: '加载中...',
+      showloadmt: false
     }
   },
   created () {
@@ -81,6 +112,7 @@ export default {
     } else {
       this.cityCode = '440600'
     }
+    this.wrapperHeight = document.documentElement.clientHeight
     this.shownodata = false
     this.getsearchhis()
   },
@@ -156,22 +188,25 @@ export default {
         if (flag) {
           // 多次加载数据
           if (res.data.data.rows.length === 0) {
-            _that.busy = true
             this.lodingTxt = true
           } else {
-            _that.busy = false
             _that.bsList = _that.bsList.concat(res.data.data.rows)
             console.log(_that.bsList)
           }
+          _that.handleBottomChange('loadingEnd') // 数据加载完毕 修改状态码
+          _that.$refs.loadmore.onBottomLoaded()
         } else {
           // 第一次加载数据
+          _that.InitialLoading = false
+          _that.showloadmt = true
           _that.bsList = res.data.data.rows
+          _that.handleTopChange('loadingEnd') // 数据加载完毕 修改状态码
+          _that.$refs.loadmore.onTopLoaded()
           if (_that.bsList.length === 0) {
             _that.shownodata = true
-            _that.busy = true
+            _that.showbsList = false
           } else {
-            // 当第一次加载数据完之后，把这个滚动到底部的函数触发打开
-            _that.busy = false
+            _that.showbsList = true
           }
           console.log(_that.bsList)
         }
@@ -180,29 +215,29 @@ export default {
         console.log('error', res)
       })
     },
-    onRefresh (done) {
-      let that = this
-      setTimeout(function () {
-        that.pageNum = 1
-        that.showloading = true
-        that.lodingTxt = false
-        that.bsList = []
-        that._queryTitleOrContentByKey(false)
-        done()
-      }, 500)
+    handleBottomChange (status) {
+      this.bottomStatus = status
     },
-    loadMore (done) {
-      this.busy = true
-      // 多次加载数据
-      setTimeout(() => {
-        this.lodingTxt = false
-        this.pageNum = this.pageNum + 1
-        this.showloading = true
-        this._queryTitleOrContentByKey(true)
-      }, 500)
+    loadBottom () {
+      this.handleBottomChange('loading') // 上拉时 改变状态码
+      this.lodingTxt = false
+      this.pageNum += 1
+      this._queryTitleOrContentByKey(true)
+    },
+    handleTopChange (status) {
+      this.topStatus = status
+    },
+    loadTop () { // 下拉刷新 模拟数据请求这里为了方便使用一次性定时器
+      this.handleTopChange('loading') // 下拉时 改变状态码
+      this.allLoaded = false // 下拉刷新时解除上拉加载的禁用
+      this.pageNum = 1
+      this.bsList = []
+      this.showloading = true
+      this.lodingTxt = false
+      this._queryTitleOrContentByKey(false)
     },
     // to 详情
-    toznDtFn (id,type) {
+    toznDtFn (id, type) {
       if (type === 'businessGuide') {
         this.$router.push({path: `/guideDetail/${id}`})
       } else if (type === 'commonQuestion') {
@@ -216,12 +251,41 @@ export default {
       this.searchbtn()
     }
   },
+  watch: {
+    topStatus (val) {
+      switch (val) {
+        case 'pull':
+          this.topText = this.topPullText
+          break
+        case 'drop':
+          this.topText = this.topDropText
+          break
+        case 'loading':
+          this.topText = this.topLoadingText
+          break
+      }
+    },
+    bottomStatus (val) {
+      switch (val) {
+        case 'pull':
+          this.bottomText = this.bottomPullText
+          break
+        case 'drop':
+          this.bottomText = this.bottomDropText
+          break
+        case 'loading':
+          this.bottomText = this.bottomLoadingText
+          break
+      }
+    }
+  },
   components: {
     mheader,
     Toast,
     loading,
     bottomline,
-    'v-scroll': Scroll
+    'v-scroll': Scroll,
+    'mt-spinner': Spinner
   }
 }
 </script>
@@ -238,6 +302,7 @@ export default {
       background-color #ffffff
       z-index 99
       padding-top 100px
+      padding-bottom 10px
       &.nohead
         padding-top 0px
     .s-top
@@ -296,7 +361,7 @@ export default {
         font-size 32px
     .se-bgul
       background-color #ffffff
-      margin-top 100px
+      margin-top 8px
       .bgli
         height 99px
         display flex
@@ -348,4 +413,14 @@ export default {
             background-size cover
     .yo-scroll
       top: 0px
+  .mint-spinner-snake
+    display: inline-block
+    vertical-align: middle
+    width 28px!important
+    height 28px!important
+  .page-loadmore-wrapper
+    overflow: scroll
+    z-index: 100
+  .mintLoadM
+    margin-top:134px
 </style>
