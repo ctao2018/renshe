@@ -1,6 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const _import = require('./_import_' + process.env.NODE_ENV)
+// const _import = require('./_import_' + process.env.NODE_ENV)
+const firstPage = () => import('components/firstPage/firstPage')
+const managementNetwork = () => import('components/managementNetwork/managementNetwork')
+const networkDetail = () => import('components/networkDetail/networkDetail')
+const businessGuide = () => import('components/businessGuide/businessGuide')
+const guideDetail = () => import('components/guideDetail/guideDetail')
+const commonProblem = () => import('components/commonProblem/commonProblem')
+const drugstore = () => import('components/drugstore/drugstore')
+const drugstoreDetail = () => import('components/drugstoreDetail/drugstoreDetail')
+const hospital = () => import('components/hospital/hospital')
+const hospitalDetail = () => import('components/hospitalDetail/hospitalDetail')
+const drugs = () => import('components/drugs/drugs')
+const drugsDetail = () => import('components/drugsDetail/drugsDetail')
+const search = () => import('components/search/search')
+const cityChoice = () => import('components/cityChoice/cityChoice')
+const comSearch = () => import('components/comSearch/comSearch')
+const comQuestDetail = () => import('components/comQuestDetail/comQuestDetail')
 
 Vue.use(Router)
 Router.prototype.goBack = function () {
@@ -20,7 +36,7 @@ const router = new Router({
     {
       path: '/firstPage',
       name: 'firstPage',
-      component: _import('firstPage/firstPage'),
+      component: firstPage,
       meta: {
         keepAlive: false
       }
@@ -28,7 +44,7 @@ const router = new Router({
     {
       path: '/firstPage/:citycode/:cityName',
       name: 'firstPagewithcitycode',
-      component: _import('firstPage/firstPage'),
+      component: firstPage,
       meta: {
         keepAlive: false
       }
@@ -36,7 +52,7 @@ const router = new Router({
     {
       path: '/managementNetwork',
       name: 'managementNetwork',
-      component: _import('managementNetwork/managementNetwork'),
+      component: managementNetwork,
       meta: {
         keepAlive: true
       }
@@ -44,7 +60,7 @@ const router = new Router({
     {
       path: '/managementNetwork/:citycode',
       name: 'managementNetworkwithcitycode',
-      component: _import('managementNetwork/managementNetwork'),
+      component: managementNetwork,
       meta: {
         keepAlive: false
       }
@@ -52,7 +68,7 @@ const router = new Router({
     {
       path: '/networkDetail/:id',
       name: 'networkDetail',
-      component: _import('networkDetail/networkDetail'),
+      component: networkDetail,
       meta: {
         keepAlive: false
       }
@@ -60,7 +76,7 @@ const router = new Router({
     {
       path: '/businessGuide',
       name: 'businessGuide',
-      component: _import('businessGuide/businessGuide'),
+      component: businessGuide,
       meta: {
         keepAlive: true
       }
@@ -68,7 +84,7 @@ const router = new Router({
     {
       path: '/businessGuide/:citycode/:type',
       name: 'businessGuidewithcitycodetype',
-      component: _import('businessGuide/businessGuide'),
+      component: businessGuide,
       meta: {
         keepAlive: false
       }
@@ -76,7 +92,7 @@ const router = new Router({
     {
       path: '/businessGuide/:citycode',
       name: 'businessGuidewithcitycode',
-      component: _import('businessGuide/businessGuide'),
+      component: businessGuide,
       meta: {
         keepAlive: false
       }
@@ -84,7 +100,7 @@ const router = new Router({
     {
       path: '/guideDetail/:id',
       name: 'guideDetail',
-      component: _import('guideDetail/guideDetail'),
+      component: guideDetail,
       meta: {
         keepAlive: false
       }
@@ -92,7 +108,7 @@ const router = new Router({
     {
       path: '/commonProblem',
       name: 'commonProblem',
-      component: _import('commonProblem/commonProblem'),
+      component: commonProblem,
       meta: {
         keepAlive: false
       }
@@ -100,7 +116,7 @@ const router = new Router({
     {
       path: '/commonProblem/:citycode',
       name: 'commonProblemwithcitycode',
-      component: _import('commonProblem/commonProblem'),
+      component: commonProblem,
       meta: {
         keepAlive: false
       }
@@ -108,7 +124,7 @@ const router = new Router({
     {
       path: '/drugstore',
       name: 'drugstore',
-      component: _import('drugstore/drugstore'),
+      component: drugstore,
       meta: {
         keepAlive: true
       }
@@ -116,7 +132,7 @@ const router = new Router({
     {
       path: '/drugstore/:citycode',
       name: 'drugstorewithcitycode',
-      component: _import('drugstore/drugstore'),
+      component: drugstore,
       meta: {
         keepAlive: false
       }
@@ -124,7 +140,7 @@ const router = new Router({
     {
       path: '/drugstoreDetail/:id',
       name: 'drugstoreDetail',
-      component: _import('drugstoreDetail/drugstoreDetail'),
+      component: drugstoreDetail,
       meta: {
         keepAlive: false
       }
@@ -132,7 +148,7 @@ const router = new Router({
     {
       path: '/hospital',
       name: 'hospital',
-      component: _import('hospital/hospital'),
+      component: hospital,
       meta: {
         keepAlive: true
       }
@@ -140,7 +156,7 @@ const router = new Router({
     {
       path: '/hospital/:citycode',
       name: 'hospitalwithcitycode',
-      component: _import('hospital/hospital'),
+      component: hospital,
       meta: {
         keepAlive: false
       }
@@ -148,7 +164,7 @@ const router = new Router({
     {
       path: '/hospitalDetail/:id',
       name: 'hospitalDetail',
-      component: _import('hospitalDetail/hospitalDetail'),
+      component: hospitalDetail,
       meta: {
         keepAlive: false
       }
@@ -156,7 +172,7 @@ const router = new Router({
     {
       path: '/drugs',
       name: 'drugs',
-      component: _import('drugs/drugs'),
+      component: drugs,
       meta: {
         keepAlive: true
       }
@@ -164,7 +180,7 @@ const router = new Router({
     {
       path: '/drugs/:citycode',
       name: 'drugswithcitycode',
-      component: _import('drugs/drugs'),
+      component: drugs,
       meta: {
         keepAlive: false
       }
@@ -172,7 +188,7 @@ const router = new Router({
     {
       path: '/drugsDetail/:id',
       name: 'drugsDetail',
-      component: _import('drugsDetail/drugsDetail'),
+      component: drugsDetail,
       meta: {
         keepAlive: false
       }
@@ -180,7 +196,7 @@ const router = new Router({
     {
       path: '/search/:pageType/:cityCode',
       name: 'search',
-      component: _import('search/search'),
+      component: search,
       meta: {
         keepAlive: false
       }
@@ -188,15 +204,7 @@ const router = new Router({
     {
       path: '/cityChoice',
       name: 'cityChoice',
-      component: _import('cityChoice/cityChoice'),
-      meta: {
-        keepAlive: false
-      }
-    },
-    {
-      path: '/cityChoice_2',
-      name: 'cityChoice_2',
-      component: _import('cityChoice/cityChoice_2'),
+      component: cityChoice,
       meta: {
         keepAlive: false
       }
@@ -204,7 +212,7 @@ const router = new Router({
     {
       path: '/comSearch/:citycode',
       name: 'comSearch',
-      component: _import('comSearch/comSearch'),
+      component: comSearch,
       meta: {
         keepAlive: false
       }
@@ -212,7 +220,7 @@ const router = new Router({
     {
       path: '/comQuestDetail/:id',
       name: 'comQuestDetail',
-      component: _import('comQuestDetail/comQuestDetail'),
+      component: comQuestDetail,
       meta: {
         keepAlive: false
       }

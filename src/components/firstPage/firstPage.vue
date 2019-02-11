@@ -80,6 +80,7 @@
 <script type="text/ecmascript-6">
 import AMap from 'AMap'
 import {queryOpenCityCodeInfoByCityName, queryOpenModuleInfo} from 'api/api'
+import {zfbAuthFn} from 'api/zfb_auth'
 import {Toast} from 'vux'
 export default {
   data () {
@@ -102,6 +103,9 @@ export default {
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }
+    // console.log(this.$store.state.app.token)
+    // console.log(this.$store.getters.token)
+    zfbAuthFn()
   },
   mounted () {
     if (this.$route.params.citycode) {

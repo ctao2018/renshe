@@ -5,7 +5,7 @@ const matutaions = {
     token: '123'
   },
 
-  mutations:{
+  mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
     },
