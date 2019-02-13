@@ -13,22 +13,22 @@
         <span class="s-sebtnt" @click="searchbtn()">搜索</span>
       </div>
       <div class="cc-bxtop" :style="`height: ${screenHeight}px`" ref="topContainer">
-        <div class="cc-cbx" v-if="cityName">
-          <p class="cc-cbxp">当前城市</p>
-          <ul class="cc-cbxul clearfix">
-            <li class="cc-cbxli cc-ctpre" @click="dqCityFn()"><i class="cc-posi"></i>{{cityName}}</li>
-          </ul>
-        </div>
         <div class="cc-cbx" v-if="ssCity.cityName">
           <p class="cc-cbxp">搜索结果</p>
           <ul class="cc-cbxul clearfix" >
             <li class="cc-cbxli" @click="tofpFn(ssCity.cityCode, ssCity.cityName)">{{ssCity.cityName}}</li>
           </ul>
         </div>
-        <div class="cc-cbx">
+        <div class="cc-cbx" v-if="cityName">
+          <p class="cc-cbxp">当前城市</p>
+          <ul class="cc-cbxul clearfix">
+            <li class="cc-cbxli cc-ctpre" @click="dqCityFn()"><i class="cc-posi"></i>{{cityName}}</li>
+          </ul>
+        </div>
+        <div class="cc-cbx" v-if="historyxs">
           <p class="cc-cbxp">最近访问城市</p>
           <ul class="cc-cbxul clearfix" >
-            <li class="cc-cbxli">{{ssCity.cityName}}</li>
+            <li class="cc-cbxli" v-for="(item,index) in fwcitylist" :key="index" @click="dqCityFn()">{{item}}</li>
           </ul>
         </div>
         <div class="cc-cbx cc-bxnop" v-for="(item, index) in addr" :key="index" :id="item.key">
@@ -36,8 +36,8 @@
             <!--<li class="cc-cbxli" v-for="(item,index) in cityList" :key="index" @click="tofpFn(item.cityCode, item.cityName)">{{item.cityName}}</li>-->
           <!--</ul>-->
           <div class="cc-cbxp">{{item.key}}</div>
-          <div class="cc-addrbx" v-for="(item1, key) in item.item" :key="key">
-            <div class="cc-addr" >{{item1.city}}</div>
+          <div class="cc-addrbx" v-for="(item1, key) in item.item" :key="key"  @click="tofpFn(item1.cityCode, item1.cityName)">
+            <div class="cc-addr" >{{item1.cityName}}</div>
           </div>
         </div>
         <div class="cc-slide">
@@ -57,44 +57,48 @@
 import mheader from 'components/m-header/m-header'
 import bottomline from 'components/bottomLine/bottomLine'
 import {Toast} from 'vux'
-import {queryAllOpenCityInfo, queryOpenCityCodeInfoByCityName} from 'api/api'
+import {queryOpenCityCodeInfoByCityName, queryAllOpenCityInfoByPinYin} from 'api/api'
 import loading from 'base/loading/loading'
 import AMap from 'AMap'
+import { saveSearch } from 'api/cache' // 引用本地存储js
+import storage from 'good-storage' // 引入good-storage包
 export default {
   data () {
     return {
       showhd: true,
       cityCode: '',
       serMsg: '',
-      cityName: '深圳',
+      cityName: '',
       showloading: false,
       shownodata: false,
-      ssCity: {cityName: '广州'},
+      ssCity: {},
       title: '城市选择',
       temABC: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       cityList: [],
       screenHeight: 0,
-      addr: [
-        {key: 'A', item: [{city: '安徽'}, {city: '阿里'}, {city: '阿里'}]},
-        {key: 'B', item: [{city: '北京'}, {city: '保定'}, {city: '北京'}, {city: '保定'}, {city: '北京'}, {city: '保定'}]},
-        {key: 'D', item: [{city: '东莞'}, {city: '东北'}]},
-        {key: 'F', item: [{city: '佛山'}, {city: '福田'}]},
-        {key: 'H', item: [{city: '河南'}, {city: '杭州'}, {city: '惠州'}]},
-        {key: 'M', item: [{city: '茂名'}, {city: '梅州'}]},
-        {key: 'S', item: [{city: '韶关'}, {city: '深圳'}, {city: '汕头'}, {city: '汕尾'}, {city: '深圳'}, {city: '汕头'}, {city: '汕尾'}]},
-        {key: 'Z', item: [{city: '湛江'}, {city: '肇庆'}, {city: '中山'}, {city: '珠海'}, {city: '肇庆'}, {city: '中山'}, {city: '珠海'}, {city: '肇庆'}, {city: '中山'}, {city: '珠海'}]}
-      ],
+      addr: [],
+      fwcitykey: 'fwcitykey',
+      fwcitylist: [],
+      historyxs: false
     }
   },
   created () {
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }
-    this.screenHeight = window.screen.availHeight - 125 // 设置#topdiv的高度
   },
   mounted () {
+    let windowWidth = document.documentElement.clientWidth
+    if (windowWidth >= 414) {
+      this.screenHeight = window.screen.availHeight - 102 // 设置#topdiv的高度
+    } else if (windowWidth >= 375) {
+      this.screenHeight = window.screen.availHeight - 94 // 设置#topdiv的高度
+    } else {
+      this.screenHeight = window.screen.availHeight - 80 // 设置#topdiv的高度
+    }
     this.getPosiFn()
-    this._queryAllOpenCityInfo()
+    this._queryAllOpenCityInfoByPinYin()
+    this.getsearchhis()
   },
   methods: {
     // 是否显示头部
@@ -132,12 +136,11 @@ export default {
       })
     },
     // 获取已开通城市列表
-    _queryAllOpenCityInfo () {
-      queryAllOpenCityInfo({
-        cityName: ''
+    _queryAllOpenCityInfoByPinYin () {
+      queryAllOpenCityInfoByPinYin({
       }).then((res) => {
-        console.log('res', res)
-        this.cityList = res.data.data.rows
+        console.log('res2', res)
+        this.addr = res.data.data
       }).catch((res) => {
         console.log('error', res)
       })
@@ -182,6 +185,7 @@ export default {
         // console.log('res', res)
         if (res.data.code === 0) {
           that.ssCity = res.data.data
+          saveSearch(that.ssCity.cityName, that.fwcitykey)
           this.$router.push({path: `/firstPage/${that.ssCity.cityCode}/${that.ssCity.cityName}`})
         } else if (res.data.code === -2) {
           that.$vux.toast.text('该城市暂未开通服务!', 'middle')
@@ -192,6 +196,7 @@ export default {
     },
     // 返回首页
     tofpFn (cityCode, cityName) {
+      saveSearch(cityName, this.fwcitykey)
       this.$router.push({path: `/firstPage/${cityCode}/${cityName}`})
     },
     // 点击侧边字母
@@ -204,6 +209,20 @@ export default {
           // console.log(slideScrollHeight)
           that.$refs.topContainer.scrollTop = slideScrollHeight // 赋值给需要滚动的盒子
         }
+      }
+    },
+    // 获取搜索历史列表
+    getsearchhis () {
+      let searches = storage.get('fwcitykey')
+      this.fwcitylist = searches ? searches : []
+      this.historyLeng()
+    },
+    // 判断是否有搜索历史
+    historyLeng () {
+      if (this.fwcitylist.length > 0) {
+        this.historyxs = true
+      } else {
+        this.historyxs = false
       }
     },
   },

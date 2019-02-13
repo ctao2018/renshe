@@ -128,3 +128,10 @@ export function queryDetailByTitleOrContent (query) {
     params: query
   })
 }
+export function queryAllOpenCityInfoByPinYin (query) {
+  return request({
+    url: 'openCityInfo/queryAllOpenCityInfoByPinYin',
+    method: 'get',
+    params: query
+  })
+}
