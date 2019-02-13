@@ -142,3 +142,10 @@ export function getTokenByCode(obj) {
   data: obj
   });
 }
+export function queryAllOpenCityInfoByPinYin (query) {
+  return request({
+    url: 'dist/openCityInfo/queryAllOpenCityInfoByPinYin',
+    method: 'get',
+    params: query
+  })
+}

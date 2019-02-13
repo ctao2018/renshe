@@ -13,8 +13,8 @@ import 'common/stylus/index.styl'
 import 'assets/css/global.css'
 import 'mint-ui/lib/style.css'
 // 移动端调测工具
-import eruda from 'eruda'
-eruda.init()
+// import eruda from 'eruda'
+// eruda.init()
 //引入lib-flexible
 import 'lib-flexible/flexible'
 import { AlertPlugin, ToastPlugin } from 'vux'
