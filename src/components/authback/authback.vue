@@ -33,7 +33,7 @@ export default {
         let str = url.substr(1);
         let strs = str.split('&');
         for (let i = 0; i < strs.length; i++) {
-          theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
+          theRequest[strs[i].split('=')[0]] = decodeURIComponent(strs[i].split('=')[1]);
         }
       }
      // console.log(theRequest)
@@ -55,7 +55,7 @@ export default {
             setToken(res.data.data);
             this.$store.commit('SET_TOKEN', res.data.data);
             let curUrl = storage.get('tobackUrl')
-            this.$router.push({path: curUrl[0]})
+            this.$router.replace({path: curUrl[0]})
            //window.location.href = this.$store.getters.curUrl
           }
         } else {

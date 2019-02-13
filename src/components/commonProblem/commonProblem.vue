@@ -2,17 +2,32 @@
     <div class="commonProblem">
       <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab :list="znList" @selId="getSelId"></tab>
-      <v-scroll :on-refresh="onRefresh"  v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" >
-        <ul class="cp-ul">
-          <li class="cp-li clearfix" v-for="(item,index) in bsList" :key="index" @click="showdtFn(index)">
-            <div class="clearfix pb10">
-              <p class="cp-lil left c3">{{item.lists.articleTitle}}</p>
-              <i class="cp-arrri right" :class="{active: item.flag === 'true'}"></i>
-            </div>
-            <div class="cp-licont" v-if="item.flag === 'true'" v-html="item.lists.answer"></div>
-          </li>
-        </ul>
-      </v-scroll>
+      <div class="page-loadmore-wrapper" :style="{ height: wrapperHeight + 'px' }">
+        <mt-spinner v-show="InitialLoading" color="#26a2ff" class="toploadbx"></mt-spinner>
+        <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange"
+                     :bottom-method="loadBottom" @bottom-status-change="handleBottomChange"
+                     :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore">
+          <ul class="cp-ul">
+            <li class="cp-li clearfix" v-for="(item,index) in bsList" :key="index" @click="showdtFn(index)">
+              <div class="clearfix pb10">
+                <p class="cp-lil left c3">{{item.lists.articleTitle}}</p>
+                <i class="cp-arrri right" :class="{active: item.flag === 'true'}"></i>
+              </div>
+              <div class="cp-licont" v-if="item.flag === 'true'" v-html="item.lists.answer"></div>
+            </li>
+          </ul>
+          <div slot="top" v-if="showloadmt" class="mint-loadmore-top mintLoadM" style="text-align:center">
+            <span v-show="topStatus !== 'loading'" :class="{ 'is-rotate': topStatus === 'drop' }">↓</span>
+            <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff"></mt-spinner>
+            <span class="mint-loadmore-text">{{ topText }}</span>
+          </div>
+          <div slot="bottom" class="mint-loadmore-bottom">
+            <span v-show="bottomStatus !== 'loading'" :class="{ 'is-rotate': bottomStatus === 'drop' }">↑</span>
+            <mt-spinner v-show="bottomStatus == 'loading'" color="#26a2ff"></mt-spinner>
+            <span class="mint-loadmore-text">{{ bottomText }}</span>
+          </div>
+        </mt-loadmore>
+      </div>
       <div class="loading-container" v-show="showloading">
         <loading></loading>
       </div>
@@ -21,6 +36,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { Spinner } from 'mint-ui'
 import tab from 'components/tab/tab'
 import mheader from 'components/m-header/m-header'
 import {formalCommonQuestion, queryCommonQusCategory} from 'api/api'
@@ -42,7 +58,21 @@ export default {
       pageNum: 1,
       category: '',
       bsList: [],
-      znList: []
+      znList: [],
+      InitialLoading: true, // 初始加载
+      allLoaded: false, // 数据是否加载完毕
+      bottomStatus: '', // 底部上拉加载状态
+      wrapperHeight: 0, // 容器高度
+      topStatus: '', // 顶部下拉加载状态
+      topText: '',
+      topPullText: '下拉刷新',
+      topDropText: '释放更新',
+      topLoadingText: '加载中...',
+      bottomText: '',
+      bottomPullText: '上拉刷新',
+      bottomDropText: '释放更新',
+      bottomLoadingText: '加载中...',
+      showloadmt: false
     }
   },
   created () {
@@ -53,13 +83,22 @@ export default {
     }
     this._queryCommonQusCategory()
     this.bsList = []
-    this._formalCommonQuestion()
-    this.showloading = true
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }
   },
-
+  mounted () {
+    let windowWidth = document.documentElement.clientWidth
+    if (windowWidth >= 414) {
+      this.wrapperHeight = document.documentElement.clientHeight - 60
+    } else if (windowWidth >= 375) {
+      this.wrapperHeight = document.documentElement.clientHeight - 54
+    } else {
+      this.wrapperHeight = document.documentElement.clientHeight - 47
+    }
+    this._formalCommonQuestion()
+    this.showloading = true
+  },
   methods: {
     titFn () {
       this.zfbhd = true
@@ -98,18 +137,18 @@ export default {
         if (flag) {
           // 多次加载数据
           if (res.data.data.rows.length === 0) {
-            _that.busy = true
           } else {
-            _that.busy = false
-          let yList2 = res.data.data.rows
-          let nList2 = []
-          for (let j = 0; j<yList2.length;j++) {
-            let b={flag:'flase',lists:yList2[j]}
-            nList2.push(b)
-          }
+            let yList2 = res.data.data.rows
+            let nList2 = []
+            for (let j = 0; j<yList2.length;j++) {
+              let b={flag:'flase',lists:yList2[j]}
+              nList2.push(b)
+            }
             _that.bsList = _that.bsList.concat(nList2)
             console.log(_that.bsList)
           }
+          _that.handleBottomChange('loadingEnd') // 数据加载完毕 修改状态码
+          _that.$refs.loadmore.onBottomLoaded()
         } else {
           // 第一次加载数据
           // _that.bsList = res.data.data.rows.map((obj, index) => {
@@ -120,38 +159,40 @@ export default {
           // })
           let yList = res.data.data.rows
           let nList = []
+          _that.InitialLoading = false
+          _that.showloadmt = true
           for (let i = 0; i<yList.length;i++) {
             let a={flag:'flase',lists:yList[i]}
             nList.push(a)
           }
           console.log('nList',nList)
-           _that.bsList = nList
-          // 当第一次加载数据完之后，把这个滚动到底部的函数触发打开
-          _that.busy = false
+          _that.bsList = nList
+          _that.handleTopChange('loadingEnd') // 数据加载完毕 修改状态码
+          _that.$refs.loadmore.onTopLoaded()
         }
       }).catch((res) => {
         _that.showloading = false
         console.log('error', res)
       })
     },
-    onRefresh (done) {
-      let that = this
-      setTimeout(function () {
-        that.pageNum = 1
-        that.bsList = []
-        that.showloading = true
-        that._formalCommonQuestion(false)
-        done()
-      }, 500)
+    handleBottomChange (status) {
+      this.bottomStatus = status
     },
-    loadMore: function () {
-      this.busy = true
-      // 多次加载数据
-      setTimeout(() => {
-        this.pageNum = this.pageNum + 1
-        this.showloading = true
-        this._formalCommonQuestion(true)
-      }, 500)
+    loadBottom () {
+      this.handleBottomChange('loading') // 上拉时 改变状态码
+      this.pageNum += 1
+      this._formalCommonQuestion(true)
+    },
+    handleTopChange (status) {
+      this.topStatus = status
+    },
+    loadTop () { // 下拉刷新 模拟数据请求这里为了方便使用一次性定时器
+      this.handleTopChange('loading') // 下拉时 改变状态码
+      this.allLoaded = false // 下拉刷新时解除上拉加载的禁用
+      this.pageNum = 1
+      this.bsList = []
+      this.showloading = true
+      this._formalCommonQuestion(false)
     },
     // 点击切换
     getSelId (id) {
@@ -168,11 +209,40 @@ export default {
       }
     }
   },
+  watch: {
+    topStatus (val) {
+      switch (val) {
+        case 'pull':
+          this.topText = this.topPullText
+          break
+        case 'drop':
+          this.topText = this.topDropText
+          break
+        case 'loading':
+          this.topText = this.topLoadingText
+          break
+      }
+    },
+    bottomStatus (val) {
+      switch (val) {
+        case 'pull':
+          this.bottomText = this.bottomPullText
+          break
+        case 'drop':
+          this.bottomText = this.bottomDropText
+          break
+        case 'loading':
+          this.bottomText = this.bottomLoadingText
+          break
+      }
+    }
+  },
   components: {
     tab,
     mheader,
     loading,
-    'v-scroll': Scroll
+    'v-scroll': Scroll,
+    'mt-spinner': Spinner
   }
 }
 </script>
@@ -181,7 +251,7 @@ export default {
   @import "~common/stylus/variable"
   .commonProblem
     .cp-ul
-      margin-top 114px
+      margin-top 16px
       .cp-li
         padding 25px 32px
         background-color #ffffff
@@ -220,4 +290,14 @@ export default {
       text-align center
       line-height 108px
       font-size 24px
+  .mint-spinner-snake
+    display: inline-block
+    vertical-align: middle
+    width 28px!important
+    height 28px!important
+  .page-loadmore-wrapper
+    overflow: scroll
+    z-index: 100
+  .mintLoadM
+    margin-top:134px
 </style>

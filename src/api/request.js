@@ -30,7 +30,7 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
-    console.log('响应拦截器', response)
+    // console.log('响应拦截器', response)
     if (response.data.code === 40301) {
       router.replace({
         path: '/auth/',
