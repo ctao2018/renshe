@@ -8,7 +8,7 @@
       <div class="selbg" @click="selbgFn()"></div>
       <div class="selbx">
         <ul class="selbxul clearfix">
-          <li class="selbxli"  v-for="(item,index) in list" :key="index" @click="tapSel(index,item.id)" :class="{active: current === index}">{{item.name || item.categoryName}}</li>
+          <li class="selbxli"  v-for="(item,index) in list" :key="index" @click="tapSel(index,item.categoryNo)" :class="{active: current === index}">{{item.name || item.categoryName}}</li>
         </ul>
       </div>
     </div>
