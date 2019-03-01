@@ -1,5 +1,5 @@
 <template>
-    <div class="citychoice">
+    <div class="citychoice" ref="citychoice">
       <mheader :title="title" v-if="showhd"></mheader>
       <div class="s-top" :class="{nohead: !showhd}">
         <div class="s-sebx">
@@ -210,11 +210,13 @@ export default {
           // console.log(slideScrollHeight)
            
            if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-             
+             that.$refs.topContainer.style.WebKitOverflowScrolling = 'auto'
              that.$refs.topContainer.scrollTop = slideScrollHeight
-            
+             setTimeout(function()  {
+                that.$refs.topContainer.scrollTop = slideScrollHeight-2
+            }, 40);
+             that.$refs.topContainer.style.WebKitOverflowScrolling = 'touch'
            } else{
-             
              that.$refs.topContainer.scrollTop = slideScrollHeight // 赋值给需要滚动的盒子
            }
         }
@@ -253,7 +255,8 @@ export default {
     width: 100%;  
     height: 100%;
     overflow: scroll;
-    -webkit-overflow-scrolling: touch;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translate3d(0,0,0);
     .s-top
       position fixed
       left 0
