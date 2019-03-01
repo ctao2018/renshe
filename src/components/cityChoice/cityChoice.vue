@@ -21,13 +21,13 @@
       <div class="cc-cbx" v-if="ssCity.cityName">
         <p class="cc-cbxp">搜索结果</p>
         <ul class="cc-cbxul clearfix" >
-          <li class="cc-cbxli" @click="tofpFn(ssCity.cityCode, ssCity.cityName)">{{ssCity.cityName}}</li>
+          <li class="cc-cbxli" @click="tofpFn(ssCity.cityCode)">{{ssCity.cityName}}</li>
         </ul>
       </div>
       <div class="cc-cbx">
         <p class="cc-cbxp">已开通城市</p>
         <ul class="cc-cbxul clearfix">
-          <li class="cc-cbxli" v-for="(item,index) in cityList" :key="index" @click="tofpFn(item.cityCode, item.cityName)">{{item.cityName}}</li>
+          <li class="cc-cbxli" v-for="(item,index) in cityList" :key="index" @click="tofpFn(item.cityCode)">{{item.cityName}}</li>
         </ul>
       </div>
       <div class="loading-container" v-show="showloading">
@@ -153,7 +153,7 @@ export default {
         // console.log('res', res)
         if (res.data.code === 0) {
           that.ssCity = res.data.data
-          this.$router.push({path: `/firstPage/${that.ssCity.cityCode}/${that.ssCity.cityName}`})
+          this.$router.push({path: `/firstPage/${that.ssCity.cityCode}}`})
         } else if (res.data.code === -2) {
           that.$vux.toast.text('该城市暂未开通服务!', 'middle')
         }
@@ -162,8 +162,8 @@ export default {
       })
     },
     // 返回首页
-    tofpFn (cityCode, cityName) {
-      this.$router.push({path: `/firstPage/${cityCode}/${cityName}`})
+    tofpFn (cityCode) {
+      this.$router.push({path: `/firstPage/${cityCode}`})
     }
   },
   components: {

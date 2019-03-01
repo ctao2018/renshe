@@ -26,7 +26,7 @@ const router = new Router({
       }
     },
     {
-      path: '/firstPage/:citycode/:cityName',
+      path: '/firstPage/:citycode',
       name: 'firstPagewithcitycode',
       component: _import('firstPage/firstPage'),
       meta: {

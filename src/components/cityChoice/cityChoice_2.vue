@@ -12,7 +12,7 @@
         </div>
         <span class="s-sebtnt" @click="searchbtn()">搜索</span>
       </div>
-      <div class="cc-bxtop" :style="`height: ${screenHeight}px`" ref="topContainer">
+      <div class="cc-bxtop" :class="{nohead: !showhd}" :style="`height: ${screenHeight}px`" ref="topContainer">
         <div class="cc-cbx" v-if="ssCity.cityName">
           <p class="cc-cbxp">搜索结果</p>
           <ul class="cc-cbxul clearfix" >
@@ -22,13 +22,13 @@
         <div class="cc-cbx" v-if="cityName">
           <p class="cc-cbxp">当前城市</p>
           <ul class="cc-cbxul clearfix">
-            <li class="cc-cbxli cc-ctpre" @click="dqCityFn()"><i class="cc-posi"></i>{{cityName}}</li>
+            <li class="cc-cbxli cc-ctpre" @click="dqCityFn(cityName)"><i class="cc-posi"></i>{{cityName}}</li>
           </ul>
         </div>
         <div class="cc-cbx" v-if="historyxs">
           <p class="cc-cbxp">最近访问城市</p>
           <ul class="cc-cbxul clearfix" >
-            <li class="cc-cbxli" v-for="(item,index) in fwcitylist" :key="index" @click="dqCityFn()">{{item}}</li>
+            <li class="cc-cbxli" v-for="(item,index) in fwcitylist" :key="index" @click="dqCityFn(item)">{{item}}</li>
           </ul>
         </div>
         <div class="cc-cbx cc-bxnop" v-for="(item, index) in addr" :key="index" :id="item.key">
@@ -40,16 +40,17 @@
             <div class="cc-addr" >{{item1.cityName}}</div>
           </div>
         </div>
-        <div class="cc-slide">
-          <a v-for="(item, index) in temABC" :key='index'>
-            <span class="temABC" @click="slide(item)">{{item}}</span>
-          </a>
-        </div>
+        
         <div class="loading-container" v-show="showloading">
           <loading></loading>
         </div>
         <bottomline :title="bltit" v-if="shownodata"></bottomline>
       </div>
+      <div class="cc-slide">
+          <span v-for="(item, index) in temABC" :key='index'>
+            <span class="temABC" @click="slide(item)">{{item}}</span>
+          </span>
+        </div>
     </div>
 </template>
 
@@ -177,16 +178,16 @@ export default {
       this.searchbtn()
     },
     // 点击当前城市
-    dqCityFn () {
+    dqCityFn (cityName) {
       let that = this
       queryOpenCityCodeInfoByCityName({
-        cityName: this.cityName
+        cityName: cityName
       }).then((res) => {
         // console.log('res', res)
         if (res.data.code === 0) {
           that.ssCity = res.data.data
           saveSearch(that.ssCity.cityName, that.fwcitykey)
-          this.$router.push({path: `/firstPage/${that.ssCity.cityCode}/${that.ssCity.cityName}`})
+          this.$router.push({path: `/firstPage/${that.ssCity.cityCode}`})
         } else if (res.data.code === -2) {
           that.$vux.toast.text('该城市暂未开通服务!', 'middle')
         }
@@ -197,7 +198,7 @@ export default {
     // 返回首页
     tofpFn (cityCode, cityName) {
       saveSearch(cityName, this.fwcitykey)
-      this.$router.push({path: `/firstPage/${cityCode}/${cityName}`})
+      this.$router.push({path: `/firstPage/${cityCode}`})
     },
     // 点击侧边字母
     slide (item) {
@@ -207,7 +208,15 @@ export default {
         if (item === that.addr[i].key) { // 判断城市列表中是否包含右侧点击的字母，不判断会报错
           let slideScrollHeight = document.querySelector('#' + item).offsetTop - 100 // 计算要滚动的距离
           // console.log(slideScrollHeight)
-          that.$refs.topContainer.scrollTop = slideScrollHeight // 赋值给需要滚动的盒子
+           
+           if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+             
+             that.$refs.topContainer.scrollTop = slideScrollHeight
+            
+           } else{
+             
+             that.$refs.topContainer.scrollTop = slideScrollHeight // 赋值给需要滚动的盒子
+           }
         }
       }
     },
@@ -238,8 +247,18 @@ export default {
 <style  lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   .citychoice
+    position absolute
+    left 0
+    top 0
+    width: 100%;  
+    height: 100%;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
     .s-top
-      margin-top 88px
+      position fixed
+      left 0
+      right 0
+      top 88px
       padding 16px 32px
       display flex
       align-items center
@@ -247,7 +266,7 @@ export default {
       background-color #ffffff
       z-index 5
       &.nohead
-        margin-top 0px
+        top 0px
       .s-sebx
         width 590px
         height 60px
@@ -325,25 +344,30 @@ export default {
         .cc-cbxp
           padding-left 32px
     .cc-slide
-      width: 40px
       height: 100%
       line-height 28px
-      position: fixed
+      position: absolute
       right: 0
-      top: 250px
+      top: 200px
       color: #333333
       display: flex
       flex-direction: column
-      font-size: 22px
+      font-size: 26px
       text-align: center
       z-index: 3
+      .temABC
+        padding 2px 20px
+        display inline-block
   .cc-bxtop
+    margin-top 168px
     overflow-x: hidden
     overflow-y: scroll
     font-size: 26px
     height: 12rem
     width 100%
-    display: inline-block
+    display: block
+    &.nohead
+      margin-top 88px
   .weui-toast__content
     font-size 26px
 </style>

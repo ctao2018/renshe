@@ -149,3 +149,9 @@ export function queryAllOpenCityInfoByPinYin (query) {
     params: query
   })
 }
+export function whArea (id) {
+  return request({
+    url: 'dist/whArea/' + id,
+    method: 'get',
+  })
+}

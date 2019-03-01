@@ -79,7 +79,7 @@
 
 <script type="text/ecmascript-6">
 import AMap from 'AMap'
-import {queryOpenCityCodeInfoByCityName, queryOpenModuleInfo} from 'api/api'
+import {queryOpenCityCodeInfoByCityName, queryOpenModuleInfo,whArea} from 'api/api'
 import {zfbAuthFn} from 'api/zfb_auth'
 import {Toast} from 'vux'
 export default {
@@ -112,8 +112,8 @@ export default {
   mounted () {
     if (this.$route.params.citycode) {
       this.cityCode = this.$route.params.citycode
-      this.cityName = this.$route.params.cityName
-      this._queryOpenCityCodeInfoByCityName()
+      this._queryOpenModuleInfo()
+      this._whArea()
     } else {
       this.getPosiFn()
     }
@@ -136,7 +136,7 @@ export default {
     },
     // to 城市选择页面
     toCityCh () {
-      this.$router.push({path: '/cityChoice/'})
+      this.$router.push({path: '/cityChoice_2/'})
     },
     // to 综合搜索页面
     toComSear () {
@@ -165,10 +165,18 @@ export default {
         AMap.event.addListener(geolocation, 'error', function (data) {
           if (data.info === 'FAILED') {
             console.log('获取您当前位置失败！')
-            that.cityName = '佛山'
-            that._queryOpenCityCodeInfoByCityName()
+            that.cityCode = '440600'
+            that._queryOpenModuleInfo()
           }
         })
+      })
+    },
+     // 根据城市编码获取城市名字
+    _whArea () {
+      whArea(this.cityCode).then((res) => {
+         this.cityName = res.data.data.name
+      }).catch((res) => {
+        console.log('error', res)
       })
     },
     // 获取城市编码
@@ -184,7 +192,7 @@ export default {
         } else if (res.data.code === -2) {
           that.$vux.toast.text('本城市暂未开通服务,将跳转到城市选择页面!', 'middle')
           setTimeout(() => {
-            this.$router.push({path: '/cityChoice/'})
+            this.$router.push({path: '/cityChoice_2/'})
           }, 2000)
         }
       }).catch((res) => {
@@ -298,6 +306,10 @@ export default {
         display flex
         align-items center
         .fp-sl
+          max-width 280px
+          overflow hidden
+          text-overflow ellipsis
+          white-space nowrap
           font-size 34px
           font-weight 500
           line-height 48px
