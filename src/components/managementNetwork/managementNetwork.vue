@@ -44,6 +44,7 @@ import mheader from 'components/m-header/m-header'
 import {getAreaInfoByCityCode, formalTransactInstitution} from 'api/api'
 import loading from 'base/loading/loading'
 import Scroll from 'components/pull'
+// import { setToken } from 'api/auth'
 export default {
   data () {
     return {
@@ -86,6 +87,11 @@ export default {
     } else {
       this.cityCode = '440600'
     }
+    // if (this.$route.params.token) {
+    //   console.log(this.$route.params.token)
+    //   setToken(this.$route.params.token);
+    //   this.$store.commit('SET_TOKEN', this.$route.params.token);
+    // } 
     if (this.$route.params.lng) {
       this.cityCode = this.$route.params.lng
     } else {
@@ -106,6 +112,7 @@ export default {
     } else {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
+    this._getAreaInfoByCityCode()
   },
   // beforeRouteLeave (to, from, next) {
   //   to.meta.keepAlive = false

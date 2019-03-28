@@ -3,7 +3,7 @@ import qs from 'qs'
 import router from '@/router'
 import store from '@/store'
 import {
-  getToken
+  getToken,setToken
 } from '@/api/auth'
 
 const service = axios.create({
@@ -31,15 +31,25 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     // console.log('响应拦截器', response)
-    if (response.data.code === 40301) {
-      router.replace({
-        path: '/auth/',
-        query: { redirect: router.currentRoute.fullPath }
-      })
-      // return Promise.reject(response)
-    } else {
-      return Promise.resolve(response)
+    let tokArr = router.currentRoute.fullPath.split('?tok=')
+    let tok =tokArr[1]
+    let urlT = tokArr[0]
+    if(tok){
+      setToken(tok);
+      store.commit('SET_TOKEN', tok);
+      router.replace({path:urlT});
+    }else{
+      if (response.data.code === 40301) {
+        router.replace({
+          path: '/auth/',
+          query: { redirect: router.currentRoute.fullPath }
+        })
+        // return Promise.reject(response)
+      } else {
+        return Promise.resolve(response)
+      }
     }
+    
   },
   error => {
     console.log('error2', error)

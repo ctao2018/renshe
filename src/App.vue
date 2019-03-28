@@ -36,7 +36,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow: scroll;
-    -webkit-overflow-scrolling: touch;
+   -webkit-overflow-scrolling: touch;
     position: absolute;
     left:0;
     top:0;

@@ -137,6 +137,7 @@ export default {
     } else {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
+    this._getAreaInfoByCityCode()
   },
   methods: {
     titFn () {

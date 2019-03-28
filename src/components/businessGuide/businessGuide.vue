@@ -100,6 +100,7 @@ export default {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
     this._formalBusinessGuide()
+    this._formalBusinessGuideca()
     this.showloading = true
   },
   methods: {

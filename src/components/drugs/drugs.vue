@@ -93,6 +93,7 @@ export default {
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }
+    this._formalInsuranceDrugsInfo()
   },
   mounted () {
     let windowWidth = document.documentElement.clientWidth

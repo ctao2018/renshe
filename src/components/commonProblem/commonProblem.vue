@@ -97,6 +97,7 @@ export default {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
     this._formalCommonQuestion()
+    this._queryCommonQusCategory()
     this.showloading = true
   },
   methods: {
