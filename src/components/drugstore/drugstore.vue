@@ -37,6 +37,7 @@
             <mt-spinner v-show="bottomStatus == 'loading'" color="#26a2ff"></mt-spinner>
             <span class="mint-loadmore-text">{{ bottomText }}</span>
           </div>
+          <nodata v-if="ydList.length<1"></nodata>
         </mt-loadmore>
       </div>
       <div class="ds-btom c9">网点数据仅供参考，如有疑问请参考当地人社官网</div>
@@ -53,6 +54,7 @@ import AMap from 'AMap'
 import mheader from 'components/m-header/m-header'
 import {getAreaInfoByCityCode, formalFixDrugstore} from 'api/api'
 import loading from 'base/loading/loading'
+import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
 export default {
   data () {
@@ -104,6 +106,7 @@ export default {
       this.titFn()
     }
     this.getPosiFn()
+    this.showloading = true
   },
   mounted () {
     let windowWidth = document.documentElement.clientWidth
@@ -281,6 +284,7 @@ export default {
   components: {
     mheader,
     loading,
+    nodata,
     'v-scroll': Scroll,
     'mt-spinner': Spinner
   }

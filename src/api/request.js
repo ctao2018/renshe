@@ -38,6 +38,7 @@ service.interceptors.response.use(
       setToken(tok);
       store.commit('SET_TOKEN', tok);
       router.replace({path:urlT});
+      store.commit('SET_MAPBTN', false);
     }else{
       if (response.data.code === 40301) {
         router.replace({

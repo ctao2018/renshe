@@ -30,6 +30,7 @@
             <mt-spinner v-show="bottomStatus == 'loading'" color="#26a2ff"></mt-spinner>
             <span class="mint-loadmore-text">{{ bottomText }}</span>
           </div>
+          <nodata v-if="ypList.length<1"></nodata>
         </mt-loadmore>
       </div>
       <div class="jbbtom c9">药品信息仅供参考，如有疑问请参考当地人社官网</div>
@@ -45,6 +46,7 @@ import {Tab, TabItem} from 'vux'
 import mheader from 'components/m-header/m-header'
 import {formalInsuranceDrugsInfo} from 'api/api'
 import loading from 'base/loading/loading'
+import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
 export default {
   data () {
@@ -217,6 +219,7 @@ export default {
     TabItem,
     mheader,
     loading,
+    nodata,
     'v-scroll': Scroll,
     'mt-spinner': Spinner
   }

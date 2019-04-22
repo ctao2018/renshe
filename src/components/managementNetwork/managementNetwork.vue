@@ -26,6 +26,7 @@
             <mt-spinner v-show="bottomStatus == 'loading'" color="#26a2ff"></mt-spinner>
             <span class="mint-loadmore-text">{{ bottomText }}</span>
           </div>
+          <nodata v-if="jbList.length<1"></nodata>
         </mt-loadmore>
       </div>
       <div class="jbbtom c9">网点数据仅供参考，如有疑问请参考当地人社官网</div>
@@ -43,6 +44,7 @@ import tab from 'components/tab/tab'
 import mheader from 'components/m-header/m-header'
 import {getAreaInfoByCityCode, formalTransactInstitution} from 'api/api'
 import loading from 'base/loading/loading'
+import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
 // import { setToken } from 'api/auth'
 export default {
@@ -101,6 +103,7 @@ export default {
       this.titFn()
     }
     this.getPosiFn()
+    this.showloading = true
     // console.log(this.$store.state.app.token)
   },
   mounted () {
@@ -276,6 +279,7 @@ export default {
     tab,
     mheader,
     loading,
+    nodata,
     'v-scroll': Scroll,
     'mt-spinner': Spinner
   }

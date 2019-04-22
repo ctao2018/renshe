@@ -26,6 +26,7 @@
             <mt-spinner v-show="bottomStatus == 'loading'" color="#26a2ff"></mt-spinner>
             <span class="mint-loadmore-text">{{ bottomText }}</span>
           </div>
+          <nodata v-if="bsList.length<1"></nodata>
         </mt-loadmore>
       </div>
       <div class="loading-container" v-show="showloading">
@@ -41,6 +42,7 @@ import tab from 'components/tab/tab'
 import mheader from 'components/m-header/m-header'
 import {formalCommonQuestion, queryCommonQusCategory} from 'api/api'
 import loading from 'base/loading/loading'
+import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
 export default {
   data () {
@@ -242,6 +244,7 @@ export default {
     tab,
     mheader,
     loading,
+    nodata,
     'v-scroll': Scroll,
     'mt-spinner': Spinner
   }

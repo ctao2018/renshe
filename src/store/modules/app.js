@@ -5,7 +5,8 @@ import {
 const matutaions = {
   state: {
     token: getToken(),
-    curUrl:''
+    curUrl:'',
+    mapbtn:true,
   },
 
   mutations: {
@@ -14,6 +15,9 @@ const matutaions = {
     },
     SET_CURURL: (state, curUrl) => {
       state.curUrl = curUrl
+    },
+    SET_MAPBTN: (state, flag) => {
+      state.mapbtn = flag
     },
   },
   actions: {

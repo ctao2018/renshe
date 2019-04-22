@@ -9,7 +9,7 @@
           <span class="nd-wzr c3">{{jbxqList.address}}</span>
         </div>
       </div>
-      <div class="nd-btnbx"><div class="nd-btna" @click="dhFn()">导航</div></div>
+      <div class="nd-btnbx" v-if="showbtn"><div class="nd-btna" @click="dhFn()">导航</div></div>
     </div>
 </template>
 
@@ -22,6 +22,7 @@ export default {
     return {
       showhd: true,
       morei: true,
+      showbtn:true,
       id: '',
       jbxqList: []
     }
@@ -32,6 +33,7 @@ export default {
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }
+    this.showbtn = this.$store.state.app.mapbtn
   },
   mounted () {
   },
