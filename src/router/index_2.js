@@ -1,24 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// const _import = require('./_import_' + process.env.NODE_ENV)
-const firstPage = () => import('components/firstPage/firstPage')
-const managementNetwork = () => import('components/managementNetwork/managementNetwork')
-const networkDetail = () => import('components/networkDetail/networkDetail')
-const businessGuide = () => import('components/businessGuide/businessGuide')
-const guideDetail = () => import('components/guideDetail/guideDetail')
-const commonProblem = () => import('components/commonProblem/commonProblem')
-const drugstore = () => import('components/drugstore/drugstore')
-const drugstoreDetail = () => import('components/drugstoreDetail/drugstoreDetail')
-const hospital = () => import('components/hospital/hospital')
-const hospitalDetail = () => import('components/hospitalDetail/hospitalDetail')
-const drugs = () => import('components/drugs/drugs')
-const drugsDetail = () => import('components/drugsDetail/drugsDetail')
-const search = () => import('components/search/search')
-const cityChoice = () => import('components/cityChoice/cityChoice')
-const comSearch = () => import('components/comSearch/comSearch')
-const comQuestDetail = () => import('components/comQuestDetail/comQuestDetail')
-const auth = () => import('components/auth/auth')
-const authback = () => import('components/authback/authback')
+const _import = require('./_import_' + process.env.NODE_ENV)
 
 Vue.use(Router)
 Router.prototype.goBack = function () {
@@ -38,15 +20,15 @@ const router = new Router({
     {
       path: '/firstPage',
       name: 'firstPage',
-      component: firstPage,
+      component: _import('firstPage/firstPage'),
       meta: {
         keepAlive: false
       }
     },
     {
-      path: '/firstPage/:citycode/:cityName',
+      path: '/firstPage/:citycode',
       name: 'firstPagewithcitycode',
-      component: firstPage,
+      component: _import('firstPage/firstPage'),
       meta: {
         keepAlive: false
       }
@@ -54,7 +36,7 @@ const router = new Router({
     {
       path: '/managementNetwork',
       name: 'managementNetwork',
-      component: managementNetwork,
+      component: _import('managementNetwork/managementNetwork'),
       meta: {
         keepAlive: true
       }
@@ -62,7 +44,7 @@ const router = new Router({
     {
       path: '/managementNetwork/:citycode',
       name: 'managementNetworkwithcitycode',
-      component: managementNetwork,
+      component: _import('managementNetwork/managementNetwork'),
       meta: {
         keepAlive: false
       }
@@ -70,7 +52,7 @@ const router = new Router({
     {
       path: '/networkDetail/:id',
       name: 'networkDetail',
-      component: networkDetail,
+      component: _import('networkDetail/networkDetail'),
       meta: {
         keepAlive: false
       }
@@ -78,7 +60,7 @@ const router = new Router({
     {
       path: '/businessGuide',
       name: 'businessGuide',
-      component: businessGuide,
+      component: _import('businessGuide/businessGuide'),
       meta: {
         keepAlive: true
       }
@@ -86,7 +68,7 @@ const router = new Router({
     {
       path: '/businessGuide/:citycode/:type',
       name: 'businessGuidewithcitycodetype',
-      component: businessGuide,
+      component: _import('businessGuide/businessGuide'),
       meta: {
         keepAlive: false
       }
@@ -94,7 +76,7 @@ const router = new Router({
     {
       path: '/businessGuide/:citycode',
       name: 'businessGuidewithcitycode',
-      component: businessGuide,
+      component: _import('businessGuide/businessGuide'),
       meta: {
         keepAlive: false
       }
@@ -102,7 +84,7 @@ const router = new Router({
     {
       path: '/guideDetail/:id',
       name: 'guideDetail',
-      component: guideDetail,
+      component: _import('guideDetail/guideDetail'),
       meta: {
         keepAlive: false
       }
@@ -110,7 +92,7 @@ const router = new Router({
     {
       path: '/commonProblem',
       name: 'commonProblem',
-      component: commonProblem,
+      component: _import('commonProblem/commonProblem'),
       meta: {
         keepAlive: false
       }
@@ -118,7 +100,7 @@ const router = new Router({
     {
       path: '/commonProblem/:citycode',
       name: 'commonProblemwithcitycode',
-      component: commonProblem,
+      component: _import('commonProblem/commonProblem'),
       meta: {
         keepAlive: false
       }
@@ -126,7 +108,7 @@ const router = new Router({
     {
       path: '/drugstore',
       name: 'drugstore',
-      component: drugstore,
+      component: _import('drugstore/drugstore'),
       meta: {
         keepAlive: true
       }
@@ -134,7 +116,7 @@ const router = new Router({
     {
       path: '/drugstore/:citycode',
       name: 'drugstorewithcitycode',
-      component: drugstore,
+      component: _import('drugstore/drugstore'),
       meta: {
         keepAlive: false
       }
@@ -142,7 +124,7 @@ const router = new Router({
     {
       path: '/drugstoreDetail/:id',
       name: 'drugstoreDetail',
-      component: drugstoreDetail,
+      component: _import('drugstoreDetail/drugstoreDetail'),
       meta: {
         keepAlive: false
       }
@@ -150,7 +132,7 @@ const router = new Router({
     {
       path: '/hospital',
       name: 'hospital',
-      component: hospital,
+      component: _import('hospital/hospital'),
       meta: {
         keepAlive: true
       }
@@ -158,7 +140,7 @@ const router = new Router({
     {
       path: '/hospital/:citycode',
       name: 'hospitalwithcitycode',
-      component: hospital,
+      component: _import('hospital/hospital'),
       meta: {
         keepAlive: false
       }
@@ -166,7 +148,7 @@ const router = new Router({
     {
       path: '/hospitalDetail/:id',
       name: 'hospitalDetail',
-      component: hospitalDetail,
+      component: _import('hospitalDetail/hospitalDetail'),
       meta: {
         keepAlive: false
       }
@@ -174,7 +156,7 @@ const router = new Router({
     {
       path: '/drugs',
       name: 'drugs',
-      component: drugs,
+      component: _import('drugs/drugs'),
       meta: {
         keepAlive: true
       }
@@ -182,7 +164,7 @@ const router = new Router({
     {
       path: '/drugs/:citycode',
       name: 'drugswithcitycode',
-      component: drugs,
+      component: _import('drugs/drugs'),
       meta: {
         keepAlive: false
       }
@@ -190,7 +172,7 @@ const router = new Router({
     {
       path: '/drugsDetail/:id',
       name: 'drugsDetail',
-      component: drugsDetail,
+      component: _import('drugsDetail/drugsDetail'),
       meta: {
         keepAlive: false
       }
@@ -198,7 +180,7 @@ const router = new Router({
     {
       path: '/search/:pageType/:cityCode',
       name: 'search',
-      component: search,
+      component: _import('search/search'),
       meta: {
         keepAlive: false
       }
@@ -206,7 +188,15 @@ const router = new Router({
     {
       path: '/cityChoice',
       name: 'cityChoice',
-      component: cityChoice,
+      component: _import('cityChoice/cityChoice'),
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/cityChoice_2',
+      name: 'cityChoice_2',
+      component: _import('cityChoice/cityChoice_2'),
       meta: {
         keepAlive: false
       }
@@ -214,7 +204,7 @@ const router = new Router({
     {
       path: '/comSearch/:citycode',
       name: 'comSearch',
-      component: comSearch,
+      component: _import('comSearch/comSearch'),
       meta: {
         keepAlive: false
       }
@@ -222,7 +212,7 @@ const router = new Router({
     {
       path: '/comQuestDetail/:id',
       name: 'comQuestDetail',
-      component: comQuestDetail,
+      component: _import('comQuestDetail/comQuestDetail'),
       meta: {
         keepAlive: false
       }
@@ -230,7 +220,7 @@ const router = new Router({
     {
       path: '/auth',
       name: 'auth',
-      component: auth,
+      component: _import('auth/auth'),
       meta: {
         keepAlive: false
       }
@@ -238,7 +228,7 @@ const router = new Router({
     {
       path: '/authback',
       name: 'authback',
-      component: authback,
+      component: _import('authback/authback'),
       meta: {
         keepAlive: false
       }

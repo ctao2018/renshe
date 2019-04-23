@@ -34,7 +34,7 @@ service.interceptors.response.use(
     let tokArr = router.currentRoute.fullPath.split('?tok=')
     let tok =tokArr[1]
     let urlT = tokArr[0]
-    if(tok){
+    if(tok){ //小程序跳转过来的
       setToken(tok);
       store.commit('SET_TOKEN', tok);
       router.replace({path:urlT});
