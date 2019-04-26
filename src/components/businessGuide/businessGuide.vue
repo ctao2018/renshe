@@ -88,6 +88,7 @@ export default {
     }
     this._formalBusinessGuideca()
     this.bsList = []
+    this._formalBusinessGuide()
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }

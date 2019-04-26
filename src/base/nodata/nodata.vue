@@ -14,5 +14,5 @@ export default {
     color #999
     font-size 28px
     text-align center
-    margin-top 200px
+    margin-top 180px
 </style>

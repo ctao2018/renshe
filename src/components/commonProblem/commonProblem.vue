@@ -85,6 +85,7 @@ export default {
     }
     this._queryCommonQusCategory()
     this.bsList = []
+    this._formalCommonQuestion()
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
     }

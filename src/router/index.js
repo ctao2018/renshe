@@ -20,6 +20,7 @@ const comSearch = () => import('components/comSearch/comSearch')
 const comQuestDetail = () => import('components/comQuestDetail/comQuestDetail')
 const auth = () => import('components/auth/auth')
 const authback = () => import('components/authback/authback')
+const jumpPage = () => import('components/jumpPage/jumpPage')
 
 Vue.use(Router)
 Router.prototype.goBack = function () {
@@ -248,6 +249,14 @@ const router = new Router({
       path: '/authback',
       name: 'authback',
       component: authback,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/jumpPage',
+      name: 'jumpPage',
+      component: jumpPage,
       meta: {
         keepAlive: false
       }
