@@ -74,6 +74,7 @@
         </ul>
       </div>
       <div id="icenter" style="width: 0; height: 0;"></div>
+      <!-- <div @click="jumptest">test跳转</div> -->
     </div>
 </template>
 
@@ -123,6 +124,19 @@ export default {
     next()
   },
   methods: {
+    //test
+    jumptest() {
+      let id = encodeURIComponent('cityAdcode=440100')
+      let url = 'alipays://platformapi/startapp?appId=2018032302431666&page=pages/managementNetwork/managementNetwork&query=' + id
+      //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/managementNetwork/managementNetwork&query=' + id
+      //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/hospital/hospital&query=cityAdcode%3D440100';
+      //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugstore/drugstore&query=cityAdcode%3D440100'
+      //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugs/drugs&query=cityAdcode%3D440100'
+      //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/businessGuide/businessGuide&query=cityAdcode%3D440100'
+      //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/commonProblem/commonProblem&query=cityAdcode%3D440100'
+      console.log(url)
+      window.location.href = url
+    },
     titFn () {
       this.showtop = false
       document.addEventListener('AlipayJSBridgeReady', function () {

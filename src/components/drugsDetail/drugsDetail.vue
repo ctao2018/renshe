@@ -7,7 +7,7 @@
           <span class="c3">{{ypxqList.name}}</span>
         </li>
         <li class="dd-li">
-          <span class="c8">药品类行</span>
+          <span class="c8">药品类型</span>
           <span class="c3" v-if="ypxqList.category === 'A'">西药</span>
           <span class="c3" v-if="ypxqList.category === 'B'">中成药</span>
           <span class="c3" v-if="ypxqList.category === 'C'">中药饮片</span>

@@ -7,6 +7,7 @@ const matutaions = {
     token: getToken(),
     curUrl:'',
     mapbtn:true,
+    positionJW:{}
   },
 
   mutations: {
@@ -18,6 +19,9 @@ const matutaions = {
     },
     SET_MAPBTN: (state, flag) => {
       state.mapbtn = flag
+    },
+    SET_POSITIONJW: (state, positionJW) => {
+      state.positionJW = positionJW
     },
   },
   actions: {

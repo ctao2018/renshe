@@ -1,5 +1,6 @@
 <template>
     <div class="drugstore">
+      <div v-if="jumpFg">
       <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <div class="ds-top c3" @click="showSelFn()">
         <span>{{qyName}}</span>
@@ -45,6 +46,8 @@
         <loading></loading>
       </div>
       <div id="icenter" style="width: 0; height: 0;"></div>
+      </div>
+      <div v-if="!jumpFg"><loading></loading></div>
     </div>
 </template>
 
@@ -52,7 +55,7 @@
 import { Spinner } from 'mint-ui'
 import AMap from 'AMap'
 import mheader from 'components/m-header/m-header'
-import {getAreaInfoByCityCode, formalFixDrugstore} from 'api/api'
+import {getAreaInfoByCityCode, formalFixDrugstore,queryValidCityWhiteList} from 'api/api'
 import loading from 'base/loading/loading'
 import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
@@ -92,7 +95,8 @@ export default {
       bottomPullText: '上拉刷新',
       bottomDropText: '释放更新',
       bottomLoadingText: '加载中...',
-      showloadmt: false
+      showloadmt: false,
+      jumpFg:false,
     }
   },
   created () {
@@ -101,11 +105,25 @@ export default {
     } else {
       this.cityCode = '440600'
     }
-    this._getAreaInfoByCityCode()
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
+      this._queryValidCityWhiteList()
+    }else{
+      this.jumpFg = true;
+      this._getAreaInfoByCityCode()
+      let jwd = this.$store.state.app.positionJW
+      if(jwd.lat){
+        this.lng= jwd.lng;
+        this.lat= jwd.lat;
+        this.jwflag = 1
+        this.area = ''
+        this.ydList = []
+        this._formalFixDrugstore()
+      }else{
+        this.getPosiFn()
+      }
     }
-    this.getPosiFn()
+    // this.getPosiFn()
     this.showloading = true
   },
   mounted () {
@@ -117,7 +135,7 @@ export default {
     } else {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
-    this._getAreaInfoByCityCode()
+    // this._getAreaInfoByCityCode()
   },
   methods: {
     titFn () {
@@ -130,6 +148,42 @@ export default {
           transparentTitle: 'none'
         })
       }, false)
+    },
+    // 查询跳转白名单
+    _queryValidCityWhiteList () {
+      queryValidCityWhiteList({
+        cityCode: this.cityCode,
+        funcCode:'fixDrugstore'
+      }).then((res) => {
+        //console.log('res', res)
+        if(res.data.code === 0){
+          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugstore/drugstore&query=cityAdcode%3D'+this.cityCode;
+          AlipayJSBridge.call('pushWindow', {
+            url: url,
+            param: {
+            }
+          });
+          AlipayJSBridge.call('popWindow');
+        }else{
+          this.jumpFg = true;
+          this._getAreaInfoByCityCode()
+          let jwd = this.$store.state.app.positionJW
+          if(jwd.lat){
+            this.lng= jwd.lng;
+            this.lat= jwd.lat;
+            this.jwflag = 1
+            this.area = ''
+            this.ydList = []
+            this._formalFixDrugstore()
+            this.showloading = true
+          }else{
+            this.getPosiFn()
+          }
+          this.showloading = true;
+        }
+      }).catch((res) => {
+        console.log('error', res)
+      })
     },
     // 获取当前位置
     getPosiFn () {
@@ -148,6 +202,11 @@ export default {
           // alert(data.position.getLng())
           that.lng = data.position.getLng() // 经度
           that.lat = data.position.getLat() // 纬度
+          let positionjw ={
+            lng:that.lng,
+            lat:that.lat
+          }
+          this.$store.commit('SET_POSITIONJW', positionjw)
           that.jwflag = 1
           that.area = ''
           that.ydList = []

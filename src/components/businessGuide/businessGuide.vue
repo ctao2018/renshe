@@ -1,5 +1,6 @@
 <template>
     <div class="businessGuide">
+      <div v-if="jumpFg">
       <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab :list="znList" :tabNum="tabNum" @selId="getSelId"></tab>
       <div class="page-loadmore-wrapper" :style="{ height: wrapperHeight + 'px' }">
@@ -30,6 +31,8 @@
       <div class="loading-container" v-show="showloading">
         <loading></loading>
       </div>
+      </div>
+      <div v-if="!jumpFg"><loading></loading></div>
     </div>
 </template>
 
@@ -37,7 +40,7 @@
 import { Spinner } from 'mint-ui'
 import tab from 'components/tab/tab'
 import mheader from 'components/m-header/m-header'
-import {formalBusinessGuide, formalBusinessGuideca} from 'api/api'
+import {formalBusinessGuide, formalBusinessGuideca,queryValidCityWhiteList} from 'api/api'
 import loading from 'base/loading/loading'
 import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
@@ -72,7 +75,8 @@ export default {
       bottomPullText: '上拉刷新',
       bottomDropText: '释放更新',
       bottomLoadingText: '加载中...',
-      showloadmt: false
+      showloadmt: false,
+      jumpFg:false,
     }
   },
   created () {
@@ -86,11 +90,14 @@ export default {
         this.category = this.$route.params.type
       }
     }
-    this._formalBusinessGuideca()
     this.bsList = []
-    this._formalBusinessGuide()
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
+      this._queryValidCityWhiteList()
+    }else{
+      this.jumpFg = true;
+      this._formalBusinessGuideca()
+      this._formalBusinessGuide()
     }
   },
   mounted () {
@@ -102,8 +109,8 @@ export default {
     } else {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
-    this._formalBusinessGuide()
-    this._formalBusinessGuideca()
+    // this._formalBusinessGuide()
+    // this._formalBusinessGuideca()
     this.showloading = true
   },
   methods: {
@@ -117,6 +124,32 @@ export default {
           transparentTitle: 'none'
         })
       }, false)
+    },
+    // 查询跳转白名单
+    _queryValidCityWhiteList () {
+      queryValidCityWhiteList({
+        cityCode: this.cityCode,
+        funcCode:'businessGuide'
+      }).then((res) => {
+        //console.log('res', res)
+        if(res.data.code === 0){
+          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/businessGuide/businessGuide&query=cityAdcode%3D'+this.cityCode;
+          AlipayJSBridge.call('pushWindow', {
+            url: url,
+            param: {
+            }
+          });
+          AlipayJSBridge.call('popWindow');
+          this.jumpFg = false;
+        }else{
+          this.jumpFg = true;
+          this._formalBusinessGuideca()
+          this._formalBusinessGuide()
+          this.showloading = true;
+        }
+      }).catch((res) => {
+        console.log('error', res)
+      })
     },
     // 获取分类信息
     _formalBusinessGuideca () {

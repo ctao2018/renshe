@@ -155,3 +155,10 @@ export function whArea (id) {
     method: 'get',
   })
 }
+export function queryValidCityWhiteList (query) {
+  return request({
+    url: 'sharecom/notGrant/cityWhiteList/queryValidCityWhiteList',
+    method: 'get',
+    params: query
+  })
+}

@@ -1,5 +1,6 @@
 <template>
     <div class="drugs">
+      <div v-if="jumpFg">
       <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab class="tab" :line-width="2" custom-bar-width="50px" :active-color="selectColor" :default-color="defaltColor">
         <tab-item  v-for="(item,index) in ypslist" :key="index" :selected="index === 0" @on-item-click="tabclickFn(item.type)">{{item.name}}</tab-item>
@@ -37,6 +38,8 @@
       <div class="loading-container" v-show="showloading">
         <loading></loading>
       </div>
+      </div>
+      <div v-if="!jumpFg"><loading></loading></div>
     </div>
 </template>
 
@@ -44,7 +47,7 @@
 import { Spinner } from 'mint-ui'
 import {Tab, TabItem} from 'vux'
 import mheader from 'components/m-header/m-header'
-import {formalInsuranceDrugsInfo} from 'api/api'
+import {formalInsuranceDrugsInfo,queryValidCityWhiteList} from 'api/api'
 import loading from 'base/loading/loading'
 import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
@@ -81,7 +84,8 @@ export default {
       bottomPullText: '上拉刷新',
       bottomDropText: '释放更新',
       bottomLoadingText: '加载中...',
-      showloadmt: false
+      showloadmt: false,
+      jumpFg:false,
     }
   },
   created () {
@@ -94,8 +98,11 @@ export default {
     this.category = ''
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
+      this._queryValidCityWhiteList()
+    }else{
+      this.jumpFg = true;
+      this._formalInsuranceDrugsInfo()
     }
-    this._formalInsuranceDrugsInfo()
   },
   mounted () {
     let windowWidth = document.documentElement.clientWidth
@@ -106,7 +113,7 @@ export default {
     } else {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
-    this._formalInsuranceDrugsInfo()
+    // this._formalInsuranceDrugsInfo()
     this.showloading = true
   },
   methods: {
@@ -120,6 +127,31 @@ export default {
           transparentTitle: 'none'
         })
       }, false)
+    },
+    // 查询跳转白名单
+    _queryValidCityWhiteList () {
+      queryValidCityWhiteList({
+        cityCode: this.cityCode,
+        funcCode:'insuraceDrugs'
+      }).then((res) => {
+        //console.log('res', res)
+        if(res.data.code === 0){
+          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugs/drugs&query=cityAdcode%3D'+this.cityCode;
+          AlipayJSBridge.call('pushWindow', {
+            url: url,
+            param: {
+            }
+          });
+          AlipayJSBridge.call('popWindow');
+          this.jumpFg = false;
+        }else{
+          this.jumpFg = true;
+          this._formalInsuranceDrugsInfo()
+          this.showloading = true;
+        }
+      }).catch((res) => {
+        console.log('error', res)
+      })
     },
     // 药品列表查询
     _formalInsuranceDrugsInfo (flag) {

@@ -1,5 +1,6 @@
 <template>
     <div class="commonProblem">
+      <div v-if="jumpFg">
       <mheader :title="title" :backi="backi" :zfbhd="zfbhd" :pageType="pageType" :searchi="searchi" :cityCode="cityCode" :morei="morei"></mheader>
       <tab :list="znList" @selId="getSelId"></tab>
       <div class="page-loadmore-wrapper" :style="{ height: wrapperHeight + 'px' }">
@@ -33,6 +34,8 @@
         <loading></loading>
       </div>
       <div class="cp-btom c9">常见问题仅供参考，如有疑问请参考当地人社官网</div>
+      </div>
+      <div v-if="!jumpFg"><loading></loading></div>
     </div>
 </template>
 
@@ -40,7 +43,7 @@
 import { Spinner } from 'mint-ui'
 import tab from 'components/tab/tab'
 import mheader from 'components/m-header/m-header'
-import {formalCommonQuestion, queryCommonQusCategory} from 'api/api'
+import {formalCommonQuestion, queryCommonQusCategory,queryValidCityWhiteList} from 'api/api'
 import loading from 'base/loading/loading'
 import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
@@ -74,7 +77,8 @@ export default {
       bottomPullText: '上拉刷新',
       bottomDropText: '释放更新',
       bottomLoadingText: '加载中...',
-      showloadmt: false
+      showloadmt: false,
+      jumpFg:false,
     }
   },
   created () {
@@ -83,11 +87,14 @@ export default {
     } else {
       this.cityCode = '440600'
     }
-    this._queryCommonQusCategory()
     this.bsList = []
-    this._formalCommonQuestion()
     if (/AlipayClient/.test(window.navigator.userAgent)) {
       this.titFn()
+      this._queryValidCityWhiteList()
+    }else{
+      this.jumpFg = true;
+      this._queryCommonQusCategory()
+      this._formalCommonQuestion()
     }
   },
   mounted () {
@@ -99,8 +106,8 @@ export default {
     } else {
       this.wrapperHeight = document.documentElement.clientHeight - 47
     }
-    this._formalCommonQuestion()
-    this._queryCommonQusCategory()
+    // this._formalCommonQuestion()
+    // this._queryCommonQusCategory()
     this.showloading = true
   },
   methods: {
@@ -114,6 +121,32 @@ export default {
           transparentTitle: 'none'
         })
       }, false)
+    },
+    // 查询跳转白名单
+    _queryValidCityWhiteList () {
+      queryValidCityWhiteList({
+        cityCode: this.cityCode,
+        funcCode:'commonQuestion'
+      }).then((res) => {
+        //console.log('res', res)
+        if(res.data.code === 0){
+          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/commonProblem/commonProblem&query=cityAdcode%3D'+this.cityCode;
+          AlipayJSBridge.call('pushWindow', {
+            url: url,
+            param: {
+            }
+          });
+          AlipayJSBridge.call('popWindow');
+          this.jumpFg = false;
+        }else{
+          this.jumpFg = true;
+          this._queryCommonQusCategory()
+          this._formalCommonQuestion()
+          this.showloading = true;
+        }
+      }).catch((res) => {
+        console.log('error', res)
+      })
     },
     // 获取分类信息
     _queryCommonQusCategory () {
