@@ -129,7 +129,7 @@ export default {
     _queryValidCityWhiteList () {
       queryValidCityWhiteList({
         cityCode: this.cityCode,
-        funcCode:'businessGuide'
+        funcCode:'h5ToMiniProgram'
       }).then((res) => {
         //console.log('res', res)
         if(res.data.code === 0){
