@@ -88,7 +88,8 @@ export default {
       this.cityCode = '440600'
     }
     this.bsList = []
-    if (/AlipayClient/.test(window.navigator.userAgent)) {
+    const strversions = navigator.userAgent;
+    if(strversions.indexOf("Alipay") != -1){
       this.titFn()
       this._queryValidCityWhiteList()
     }else{
@@ -128,15 +129,15 @@ export default {
         cityCode: this.cityCode,
         funcCode:'h5ToMiniProgram'
       }).then((res) => {
-        //console.log('res', res)
+        //console.log('常见问题白名单', res)
         if(res.data.code === 0){
           let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/commonProblem/commonProblem&query=cityAdcode%3D'+this.cityCode;
-          AlipayJSBridge.call('pushWindow', {
-            url: url,
-            param: {
-            }
-          });
-          AlipayJSBridge.call('popWindow');
+          document.addEventListener('AlipayJSBridgeReady', function () {
+            AlipayJSBridge.call('pushWindow', {
+              url: url,
+            });
+            AlipayJSBridge.call('popWindow');
+          }, false);
           this.jumpFg = false;
         }else{
           this.jumpFg = true;

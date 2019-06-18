@@ -105,7 +105,10 @@ export default {
     } else {
       this.cityCode = '440600'
     }
-    if (/AlipayClient/.test(window.navigator.userAgent)) {
+    // if (/AlipayClient/.test(window.navigator.userAgent)) {
+    // }
+    const strversions = navigator.userAgent;
+    if(strversions.indexOf("Alipay") != -1){
       this.titFn()
       this._queryValidCityWhiteList()
     }else{
@@ -158,12 +161,12 @@ export default {
         //console.log('res', res)
         if(res.data.code === 0){
           let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugstore/drugstore&query=cityAdcode%3D'+this.cityCode;
-          AlipayJSBridge.call('pushWindow', {
-            url: url,
-            param: {
-            }
-          });
-          AlipayJSBridge.call('popWindow');
+          document.addEventListener('AlipayJSBridgeReady', function () {
+            AlipayJSBridge.call('pushWindow', {
+              url: url,
+            });
+            AlipayJSBridge.call('popWindow');
+          }, false);
         }else{
           this.jumpFg = true;
           this._getAreaInfoByCityCode()
