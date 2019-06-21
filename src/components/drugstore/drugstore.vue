@@ -59,6 +59,7 @@ import {getAreaInfoByCityCode, formalFixDrugstore,queryValidCityWhiteList} from 
 import loading from 'base/loading/loading'
 import nodata from 'base/nodata/nodata'
 import Scroll from 'components/pull'
+import { setTimeout } from 'timers';
 export default {
   data () {
     return {
@@ -107,10 +108,28 @@ export default {
     }
     // if (/AlipayClient/.test(window.navigator.userAgent)) {
     // }
+    let u = navigator.userAgent;
+    let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
     const strversions = navigator.userAgent;
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      this._queryValidCityWhiteList()
+      if(!isIOS){
+        this._queryValidCityWhiteList()
+      }else{
+        this.jumpFg = true;
+        this._getAreaInfoByCityCode()
+        let jwd = this.$store.state.app.positionJW
+        if(jwd.lat){
+          this.lng= jwd.lng;
+          this.lat= jwd.lat;
+          this.jwflag = 1
+          this.area = ''
+          this.ydList = []
+          this._formalFixDrugstore()
+        }else{
+          this.getPosiFn()
+        }
+      }
     }else{
       this.jumpFg = true;
       this._getAreaInfoByCityCode()
@@ -126,8 +145,7 @@ export default {
         this.getPosiFn()
       }
     }
-    // this.getPosiFn()
-    this.showloading = true
+    this.showloading = true;
   },
   mounted () {
     let windowWidth = document.documentElement.clientWidth
@@ -152,6 +170,20 @@ export default {
         })
       }, false)
     },
+    //待支付宝js加载
+    ready(callback){
+      if (window.AlipayJSBridge) {
+        callback && callback();
+      } else {
+        document.addEventListener('AlipayJSBridgeReady', callback, false);
+      }
+    },
+    toXCX(url){
+      AlipayJSBridge.call('pushWindow', {
+        url: url
+      });
+      AlipayJSBridge.call('popWindow');
+    },
     // 查询跳转白名单
     _queryValidCityWhiteList () {
       queryValidCityWhiteList({
@@ -161,12 +193,18 @@ export default {
         //console.log('res', res)
         if(res.data.code === 0){
           let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugstore/drugstore&query=cityAdcode%3D'+this.cityCode;
-          document.addEventListener('AlipayJSBridgeReady', function () {
-            AlipayJSBridge.call('pushWindow', {
-              url: url,
-            });
-            AlipayJSBridge.call('popWindow');
-          }, false);
+          // document.addEventListener('AlipayJSBridgeReady', function () {
+          //   AlipayJSBridge.call('pushWindow', {
+          //     url: url,
+          //   });
+          //   AlipayJSBridge.call('popWindow');
+          // }, false);
+          //this.ready(this.toXCX(url));
+          
+          ap.pushWindow({
+            url: url,
+          });
+          ap.popWindow();
         }else{
           this.jumpFg = true;
           this._getAreaInfoByCityCode()

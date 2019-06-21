@@ -97,9 +97,16 @@ export default {
     this.ypList = []
     this.category = ''
     const strversions = navigator.userAgent;
+    let u = navigator.userAgent;
+    let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      this._queryValidCityWhiteList()
+      if(!isIOS){
+        this._queryValidCityWhiteList()
+      }else{
+        this.jumpFg = true;
+        this._formalInsuranceDrugsInfo()
+      }
     }else{
       this.jumpFg = true;
       this._formalInsuranceDrugsInfo()
@@ -138,12 +145,10 @@ export default {
         //console.log('res', res)
         if(res.data.code === 0){
           let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugs/drugs&query=cityAdcode%3D'+this.cityCode;
-          document.addEventListener('AlipayJSBridgeReady', function () {
-            AlipayJSBridge.call('pushWindow', {
-              url: url,
-            });
-            AlipayJSBridge.call('popWindow');
-          }, false);
+          ap.pushWindow({
+            url: url,
+          });
+          ap.popWindow();
           this.jumpFg = false;
         }else{
           this.jumpFg = true;

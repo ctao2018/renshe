@@ -129,9 +129,27 @@ export default {
       this.cityCode = '440600'
     }
     const strversions = navigator.userAgent;
+    let u = navigator.userAgent;
+    let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      this._queryValidCityWhiteList()
+      if(!isIOS){
+        this._queryValidCityWhiteList()
+      }else{
+        this.jumpFg = true;
+        this._getAreaInfoByCityCode()
+        let jwd = this.$store.state.app.positionJW
+        if(jwd.lat){
+          this.lng= jwd.lng;
+          this.lat= jwd.lat;
+          this.jwflag = 1
+          this.area = ''
+          this.yyList = []
+          this._formalFixHospitals()
+        }else{
+          this.getPosiFn()
+        }
+      }
     }else{
       this.jumpFg = true;
       this._getAreaInfoByCityCode()
@@ -173,6 +191,20 @@ export default {
         })
       }, false)
     },
+    //待支付宝js加载
+    ready(callback){
+      if (window.AlipayJSBridge) {
+        callback && callback();
+      } else {
+        document.addEventListener('AlipayJSBridgeReady', callback, false);
+      }
+    },
+    toXCX(url){
+      AlipayJSBridge.call('pushWindow', {
+        url: url,
+      });
+      AlipayJSBridge.call('popWindow');
+    },
     // 查询跳转白名单
     _queryValidCityWhiteList () {
       queryValidCityWhiteList({
@@ -182,12 +214,11 @@ export default {
         //console.log('res医院', res)
         if(res.data.code === 0){
           let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/hospital/hospital&query=cityAdcode%3D'+this.cityCode;
-          document.addEventListener('AlipayJSBridgeReady', function () {
-            AlipayJSBridge.call('pushWindow', {
-              url: url,
-            });
-            AlipayJSBridge.call('popWindow');
-          }, false);
+          //this.ready(this.toXCX(url));
+          ap.pushWindow({
+            url: url,
+          })
+          ap.popWindow();
           this.jumpFg = false;
         }else{
           this.jumpFg = true;

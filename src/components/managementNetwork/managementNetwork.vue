@@ -104,11 +104,30 @@ export default {
       this.cityCode = this.$route.params.lng
     } else {
     }
+    let u = navigator.userAgent;
+    let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
     // if (/AlipayClient/.test(window.navigator.userAgent)) {
     const strversions = navigator.userAgent;
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      this._queryValidCityWhiteList()
+      if(!isIOS){
+        this._queryValidCityWhiteList()
+      }else{
+         this.jumpFg = true;
+        this._getAreaInfoByCityCode()
+        let jwd = this.$store.state.app.positionJW
+        if(jwd.lat){
+          this.lng= jwd.lng;
+          this.lat= jwd.lat;
+          this.jwflag = 1
+          this.area = ''
+          this.jbList = []
+          this._formalTransactInstitution()
+        }else{
+          this.getPosiFn()
+        }
+        this.showloading = true;
+      }
     }else{
       this.jumpFg = true;
       this._getAreaInfoByCityCode()
@@ -172,18 +191,11 @@ export default {
         //console.log('res', res)
         if(res.data.code === 0){
           let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/managementNetwork/managementNetwork&query=cityAdcode%3D'+this.cityCode;
-          // AlipayJSBridge.call('pushWindow', {
-          //   url: url,
-          //   param: {
-          //   }
-          // });
-          // AlipayJSBridge.call('popWindow');
-          document.addEventListener('AlipayJSBridgeReady', function () {
-            AlipayJSBridge.call('pushWindow', {
-              url: url,
-            });
-            AlipayJSBridge.call('popWindow');
-          }, false);
+          ap.pushWindow({
+            url: url,
+          });
+          ap.popWindow();
+          
           this.jumpFg = false;
         }else{
           this.jumpFg = true;
