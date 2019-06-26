@@ -74,7 +74,7 @@
         </ul>
       </div>
       <div id="icenter" style="width: 0; height: 0;"></div>
-      <!-- <div @click="jumptest">test跳转</div> -->
+      <!-- <div @click="jumptest">test授权</div> -->
     </div>
 </template>
 
@@ -109,6 +109,19 @@ export default {
     //this.$store.commit('SET_CURURL', window.location.href)
     // console.log(this.$store.state.app.token)
     // console.log(this.$store.getters.token)
+
+    // 0624test star
+    let url = decodeURI(location.search)
+    console.log('test',url)
+      let theRequest = new Object()
+      if (url.indexOf('?') !== -1) {
+        let str = url.substr(1);
+        let strs = str.split('&');
+        for (let i = 0; i < strs.length; i++) {
+          theRequest[strs[i].split('=')[0]] = decodeURIComponent(strs[i].split('=')[1]);
+        }
+      }
+     console.log('theRequest',theRequest)
   },
   mounted () {
     if (this.$route.params.citycode) {
@@ -127,13 +140,17 @@ export default {
     //test
     jumptest() {
       let id = encodeURIComponent('cityAdcode=440100')
-      let url = 'alipays://platformapi/startapp?appId=2018032302431666&page=pages/managementNetwork/managementNetwork&query=' + id
+      //let url = 'alipays://platformapi/startapp?appId=2018032302431666&page=pages/managementNetwork/managementNetwork&query=' + id
       //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/managementNetwork/managementNetwork&query=' + id
       //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/hospital/hospital&query=cityAdcode%3D440100';
       //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugstore/drugstore&query=cityAdcode%3D440100'
       //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugs/drugs&query=cityAdcode%3D440100'
       //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/businessGuide/businessGuide&query=cityAdcode%3D440100'
       //let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/commonProblem/commonProblem&query=cityAdcode%3D440100'
+      
+      let backUrl = decodeURIComponent('https://test.szyibei.com/sbjccx/firstPage/')
+      //let url = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2017022505871867&scope=auth_base&redirect_uri=' + backUrl
+      let url = 'https://test.szyibei.com/oauth2/publicAppAuthorize.htm?app_id=2017022505871867&scope=auth_base&redirect_uri=' + backUrl
       console.log(url)
       window.location.href = url
     },

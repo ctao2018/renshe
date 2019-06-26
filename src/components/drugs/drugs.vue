@@ -144,12 +144,18 @@ export default {
       }).then((res) => {
         //console.log('res', res)
         if(res.data.code === 0){
-          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugs/drugs&query=cityAdcode%3D'+this.cityCode;
-          ap.pushWindow({
-            url: url,
-          });
-          ap.popWindow();
-          this.jumpFg = false;
+          if(res.data.data.resultState ===2 || res.data.data.resultState ===5){
+            let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/drugs/drugs&query=cityAdcode%3D'+this.cityCode;
+            ap.pushWindow({
+              url: url,
+            });
+            ap.popWindow();
+            this.jumpFg = false;
+          }else{
+            this.jumpFg = true;
+            this._formalInsuranceDrugsInfo()
+            this.showloading = true;
+          }
         }else{
           this.jumpFg = true;
           this._formalInsuranceDrugsInfo()

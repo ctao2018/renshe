@@ -139,12 +139,19 @@ export default {
       }).then((res) => {
         //console.log('常见问题白名单', res)
         if(res.data.code === 0){
-          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/commonProblem/commonProblem&query=cityAdcode%3D'+this.cityCode;
-          ap.pushWindow({
-            url: url,
-          });
-          ap.popWindow();
-          this.jumpFg = false;
+          if(res.data.data.resultState ===2 || res.data.data.resultState ===5){
+            let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/commonProblem/commonProblem&query=cityAdcode%3D'+this.cityCode;
+            ap.pushWindow({
+              url: url,
+            });
+            ap.popWindow();
+            this.jumpFg = false;
+          }else{
+            this.jumpFg = true;
+            this._queryCommonQusCategory()
+            this._formalCommonQuestion()
+            this.showloading = true;
+          }
         }else{
           this.jumpFg = true;
           this._queryCommonQusCategory()

@@ -136,37 +136,12 @@ export default {
       if(!isIOS){
         this._queryValidCityWhiteList()
       }else{
-        this.jumpFg = true;
-        this._getAreaInfoByCityCode()
-        let jwd = this.$store.state.app.positionJW
-        if(jwd.lat){
-          this.lng= jwd.lng;
-          this.lat= jwd.lat;
-          this.jwflag = 1
-          this.area = ''
-          this.yyList = []
-          this._formalFixHospitals()
-        }else{
-          this.getPosiFn()
-        }
+        this.toZX()
       }
     }else{
-      this.jumpFg = true;
-      this._getAreaInfoByCityCode()
-      let jwd = this.$store.state.app.positionJW
-      if(jwd.lat){
-        this.lng= jwd.lng;
-        this.lat= jwd.lat;
-        this.jwflag = 1
-        this.area = ''
-        this.yyList = []
-        this._formalFixHospitals()
-      }else{
-        this.getPosiFn()
-      }
+      this.toZX()
     }
     // this.getPosiFn()
-    this.showloading = true
   },
   mounted () {
     let windowWidth = document.documentElement.clientWidth
@@ -213,33 +188,41 @@ export default {
       }).then((res) => {
         //console.log('res医院', res)
         if(res.data.code === 0){
-          let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/hospital/hospital&query=cityAdcode%3D'+this.cityCode;
-          //this.ready(this.toXCX(url));
-          ap.pushWindow({
-            url: url,
-          })
-          ap.popWindow();
-          this.jumpFg = false;
-        }else{
-          this.jumpFg = true;
-          this._getAreaInfoByCityCode()
-          let jwd = this.$store.state.app.positionJW
-          if(jwd.lat){
-            this.lng= jwd.lng;
-            this.lat= jwd.lat;
-            this.jwflag = 1
-            this.area = ''
-            this.yyList = []
-            this._formalFixHospitals()
-            this.showloading = true
+          if(res.data.data.resultState ===2 || res.data.data.resultState ===5){
+            let url = 'alipays://platformapi/startapp?appId=2019030563473125&page=pages/hospital/hospital&query=cityAdcode%3D'+this.cityCode;
+            //this.ready(this.toXCX(url));
+            ap.pushWindow({
+              url: url,
+            })
+            ap.popWindow();
+            this.jumpFg = false;
           }else{
-            this.getPosiFn()
+            this.toZX()
           }
-          this.showloading = true;
+        }else{
+          this.toZX()
         }
       }).catch((res) => {
         console.log('error', res)
       })
+    },
+    //跳原H5
+    toZX() {
+      this.jumpFg = true;
+      this._getAreaInfoByCityCode()
+      let jwd = this.$store.state.app.positionJW
+      if(jwd.lat){
+        this.lng= jwd.lng;
+        this.lat= jwd.lat;
+        this.jwflag = 1
+        this.area = ''
+        this.yyList = []
+        this._formalFixHospitals()
+        this.showloading = true
+      }else{
+        this.getPosiFn()
+      }
+      this.showloading = true;
     },
     // 获取当前位置
     getPosiFn () {
