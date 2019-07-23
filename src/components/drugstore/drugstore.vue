@@ -113,15 +113,16 @@ export default {
     const strversions = navigator.userAgent;
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      if(!isIOS){
-        this._queryValidCityWhiteList()
-      }else{
-        if(this.cityCode === '445300'){
-          this._queryValidCityWhiteList()
-        }else{
-          this.toZX();
-        }
-      }
+      this._queryValidCityWhiteList()
+      // if(!isIOS){
+      //   this._queryValidCityWhiteList()
+      // }else{
+      //   if(this.cityCode === '445300'){
+      //     this._queryValidCityWhiteList()
+      //   }else{
+      //     this.toZX();
+      //   }
+      // }
     }else{
       this.toZX();
     }

@@ -93,13 +93,14 @@ export default {
     let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      if(!isIOS){
-        this._queryValidCityWhiteList()
-      }else{
-        this.jumpFg = true;
-        this._queryCommonQusCategory()
-        this._formalCommonQuestion()
-      }
+      this._queryValidCityWhiteList()
+      // if(!isIOS){
+      //   this._queryValidCityWhiteList()
+      // }else{
+      //   this.jumpFg = true;
+      //   this._queryCommonQusCategory()
+      //   this._formalCommonQuestion()
+      // }
     }else{
       this.jumpFg = true;
       this._queryCommonQusCategory()

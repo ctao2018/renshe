@@ -104,21 +104,23 @@ export default {
       this.cityCode = this.$route.params.lng
     } else {
     }
+
+
     let u = navigator.userAgent;
     let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-    // if (/AlipayClient/.test(window.navigator.userAgent)) {
     const strversions = navigator.userAgent;
     if(strversions.indexOf("Alipay") != -1){
       this.titFn()
-      if(!isIOS){
-        this._queryValidCityWhiteList()
-      }else{
-        if(this.cityCode === '445300'){
-          this._queryValidCityWhiteList()
-        }else{
-          this.toZX()
-        }
-      }
+      this._queryValidCityWhiteList()
+      // if(!isIOS){
+      //   this._queryValidCityWhiteList()
+      // }else{
+      //   if(this.cityCode === '445300'){
+      //     this._queryValidCityWhiteList()
+      //   }else{
+      //     this.toZX()
+      //   }
+      // }
     }else{
       this.toZX()
     }
