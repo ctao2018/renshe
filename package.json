@@ -14,7 +14,7 @@
     "build-prod": "cross-env NODE_ENV=production env_config=prod node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.21.1",
     "babel-runtime": "^6.26.0",
     "better-scroll": "^1.8.4",
     "fastclick": "^1.0.6",
